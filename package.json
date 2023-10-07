@@ -1,6 +1,6 @@
 {
 	"name": "redux-super",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"description": "redux helper",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
