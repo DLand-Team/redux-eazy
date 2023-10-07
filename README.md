@@ -5,7 +5,7 @@
 
 <p align="center">
   <img src="https://shields.io/badge/TypeScript-Driver-green?logo=typescript" alt="lang">
-  <img src="https://shields.io/badge/version-0.0.5-green?logo=github" alt="version">
+  <img src="https://shields.io/badge/version-0.0.6-green?logo=github" alt="version">
 </p>
 
 # Redux Super

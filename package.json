@@ -1,6 +1,6 @@
 {
 	"name": "redux-super",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"description": "redux helper",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -21,10 +21,10 @@
 	],
 	"author": "闲D阿强",
 	"license": "MIT",
-	"homepage": "https://www.moderate.run/#/",
+	"homepage": "https://github.com/DLand-Team/redux-super",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/moderateReact/r6helper"
+		"url": "https://github.com/DLand-Team/redux-super"
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.5.5",
