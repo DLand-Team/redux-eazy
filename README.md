@@ -5,7 +5,7 @@
 
 <p align="center">
   <img src="https://shields.io/badge/TypeScript-Driver-green?logo=typescript" alt="lang">
-  <img src="https://shields.io/badge/version-0.0.6-green?logo=github" alt="version">
+  <img src="https://shields.io/badge/version-0.0.8-green?logo=github" alt="version">
 </p>
 
 # Redux Super
@@ -151,7 +151,6 @@ const watch = (listenerMiddleware: ListenerMiddleware) => {
 			dp("authStore", "setToken", { token: Date.now().toString() });
 		},
 	});
-	// 监听例子
 	listenerMiddleware.startListening({
 		predicate: (action, currentState, previousState) => {
 			return false;
@@ -268,7 +267,7 @@ export const dp = getDp(reduxStore, stores);
 
 ### useFlatInject
 
-`reducer`，`thunk`，`state`全都扁平的被导出，这是件非常爽的事情，并且`thunk`无需`dispatch`，直接执行就行。
+`Reducers`, `thunks`, and `states` are all exported in a flat structure, which is quite convenient. Moreover, thunks can be executed directly without needing to dispatch them. This is quite handy.
 
 ```ts
 import Talk from "talkjs";
