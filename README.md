@@ -5,11 +5,16 @@
 
 <p align="center">
   <img src="https://shields.io/badge/TypeScript-Driver-green?logo=typescript" alt="lang">
-  <img src="https://shields.io/badge/version-0.2.5-green?logo=github" alt="version">
+  <img src="https://shields.io/badge/version-0.0.5-green?logo=github" alt="version">
 </p>
 
 # Redux Super
 ## 使用方法
+### 安装
+
+```shell
+pnpm i redux-super
+```
 
 ### 创建store实体
 
