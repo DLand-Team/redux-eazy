@@ -202,12 +202,121 @@ export default api;
 
 ```
 
-### 创建
+### 配置类型支持
+
+```ts
+import { Action, ThunkAction, TypedStartListening } from '@reduxjs/toolkit';
+import {
+  appSelectorHookCreater,
+  getCreateThunkWithName,
+  getCreateThunks,
+  listenerMiddleware,
+  useReduxDispatch,
+} from 'redux-super';
+import { reduxStore } from './index';
+/* Types */
+export type ReduxStore = typeof reduxStore;
+export type ReduxState = ReturnType<typeof reduxStore.getState>;
+export type ReduxDispatch = typeof reduxStore.dispatch;
+export type ReduxThunkAction<ReturnType = void> = ThunkAction<
+  ReturnType,
+  ReduxState,
+  unknown,
+  Action
+>;
+export const createThunkWithName = getCreateThunkWithName<ReduxState, ReduxDispatch>;
+export const useDispatch = useReduxDispatch<ReduxDispatch>;
+export const useAppSelecter = appSelectorHookCreater<ReduxState>;
+export type AppStartListening = TypedStartListening<ReduxState, ReduxDispatch>;
+export const startAppListening = listenerMiddleware.startListening as AppStartListening;
+export const createThunks = getCreateThunks<ReduxState, ReduxDispatch>();
+
+```
+### 创建reduxStore
+
+```ts
+import {
+  createStore,
+  flatInjectHookCreater,
+  getActionTypeCreater,
+  getDp,
+  resetReduxHookCreater,
+} from 'redux-super';
+import { stores } from './stores';
+
+// 前置基本
+export const getActionType = getActionTypeCreater(stores);
+
+export const reduxStore = createStore(stores);
+
+// 后置
+/* Hooks */
+export const useResetRedux = resetReduxHookCreater(stores);
+export const useFlat = flatInjectHookCreater(stores, reduxStore);
+/* utils */
+export const dp = getDp(reduxStore, stores);
+
+```
 
 
 ## hooks
 ### useFlatInject
+`reducer`，`thunk`，`state`全都扁平的被导出，这是件非常爽的事情，并且`thunk`无需`dispatch`，直接执行就行。
+
+```ts
+import Talk from 'talkjs';
+import { useEffect, useRef } from 'react';
+import { useFlatInject } from '../hooks';
+
+const ChatFunction = () => {
+  const { userInfo, userInfoMemberAct } = useFlatInject('authStore');
+  useEffect(() => {
+    userInfoMemberAct()
+  }, []);
+
+  const chatContainer = useRef(null);
+
+  return (
+    <div>
+      <div ref={chatContainer} style={{ height: '800px' }}></div>
+    </div>
+  );
+};
+
+export default ChatFunction;
+```
 ### useResetRedux
+重置redux
+```ts
+import { useMemo } from 'react';
+import { useDispatch } from 'react-redux';
+import storageHelper from 'src/common/utils/storageHelper';
+import { stores } from 'src/service/stores';
+
+const useResetRedux = () => {
+  const dp = useDispatch();
+  const func = useMemo<() => void>(() => {
+    return () => {
+      storageHelper.clear();
+      Object.values(stores).forEach((item) => {
+        const { reset } = item.slice.actions as any;
+        reset && dp(reset());
+      });
+    };
+  }, []);
+  return func;
+};
+
+export default useResetRedux;
+
+```
 ### useAppSelector
 ### useDispatch
+
+## utils
+### awsomeDispatch
+### createThunkWithName
+### createSliceCustom
+### createWatchMatcher
+### getActionType
 
