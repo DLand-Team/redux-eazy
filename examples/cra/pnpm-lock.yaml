@@ -41,9 +41,9 @@ dependencies:
   react-scripts:
     specifier: 5.0.1
     version: 5.0.1(@babel/plugin-syntax-flow@7.22.5)(@babel/plugin-transform-react-jsx@7.22.15)(eslint@8.51.0)(react@18.2.0)(typescript@4.9.5)
-  redux-super:
-    specifier: ^0.0.8
-    version: 0.0.8
+  redux-eazy:
+    specifier: ^0.0.2
+    version: 0.0.2
   typescript:
     specifier: ^4.9.5
     version: 4.9.5
@@ -4206,6 +4206,10 @@ packages:
 
   /dedent@0.7.0:
     resolution: {integrity: sha512-Q6fKUPqnAHAyhiUgFU7BUzLiv0kd8saH9al7tnu5Q/okj6dnupxyTgFIBjVzJATdfIAm9NAsvXNzjaKa+bxVyA==}
+    dev: false
+
+  /deep-diff@0.3.8:
+    resolution: {integrity: sha512-yVn6RZmHiGnxRKR9sJb3iVV2XTF1Ghh2DiWRZ3dMnGc43yUdWWF/kX6lQyk3+P84iprfWKU/8zFTrlkvtFm1ug==}
     dev: false
 
   /deep-equal@2.2.2:
@@ -8752,8 +8756,16 @@ packages:
       strip-indent: 3.0.0
     dev: false
 
-  /redux-super@0.0.8:
-    resolution: {integrity: sha512-ib1lgr43/QTu6pO7lM++HfQorF54KZJNfCHwbZRryUowgD4pcrbxbTsCX85IsbmHxVvqXVjnA0tiLW5zKsxJTA==}
+  /redux-eazy@0.0.2:
+    resolution: {integrity: sha512-sxGsu45LdezYQTx6PQnRxiDFnCSN5uUtwIN5LUKv7P7aCWK3t/KIBkzKN4e2081GU5vljF5OUjLqOMUX/pMVqA==}
+    dependencies:
+      redux-logger: 3.0.6
+    dev: false
+
+  /redux-logger@3.0.6:
+    resolution: {integrity: sha512-JoCIok7bg/XpqA1JqCqXFypuqBbQzGQySrhFzewB7ThcnysTO30l4VCst86AuB9T9tuT03MAA56Jw2PNhRSNCg==}
+    dependencies:
+      deep-diff: 0.3.8
     dev: false
 
   /redux-thunk@2.4.2(redux@4.2.1):

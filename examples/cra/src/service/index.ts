@@ -4,7 +4,7 @@ import {
   getActionTypeCreater,
   getDp,
   resetReduxHookCreater,
-} from 'redux-super';
+} from 'redux-eazy';
 import { stores } from './stores';
 
 // 前置基本

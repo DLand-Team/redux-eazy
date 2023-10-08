@@ -1,6 +1,6 @@
 /* Core */
 import { PayloadAction } from "@reduxjs/toolkit";
-import { createSliceCustom } from "redux-super";
+import { createSliceCustom } from "redux-eazy";
 import names from "../names";
 
 /* Types */

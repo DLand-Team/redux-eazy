@@ -14,6 +14,14 @@ export default function Home() {
 		<>
 			<main className={`${styles.main} ${inter.className}`}>
 				<div>
+					<a
+						className="App-link"
+						href="https://github.com/DLand-Team"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						闲D岛🏝️
+					</a>
 					<div>
 						<A></A>
 						<button

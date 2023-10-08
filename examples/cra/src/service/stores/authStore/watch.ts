@@ -1,4 +1,4 @@
-import { ListenerMiddleware } from "redux-super";
+import { ListenerMiddleware } from "redux-eazy";
 import { dp, getActionType } from "../..";
 import { startAppListening } from "../../setup";
 

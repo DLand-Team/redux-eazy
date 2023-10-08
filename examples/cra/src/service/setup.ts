@@ -5,7 +5,7 @@ import {
 	getCreateThunks,
 	listenerMiddleware,
 	useReduxDispatch,
-} from "redux-super";
+} from "redux-eazy";
 import { reduxStore } from "./index";
 /* Types */
 export type ReduxStore = typeof reduxStore;

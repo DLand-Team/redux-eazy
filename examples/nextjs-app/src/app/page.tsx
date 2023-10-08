@@ -10,11 +10,23 @@ export default function Home() {
 	return (
 		<main className={styles.main}>
 			<div>
-				<div>{appInfo}</div>
-				<div>{info}</div>
+				<a
+					className="App-link"
+					href="https://github.com/DLand-Team"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					闲D岛🏝️
+				</a>
+				<div>
+					<div>{appInfo}</div>
+					<A />
+				</div>
+				<div>
+					<div>{info}</div>
+					<B />
+				</div>
 			</div>
-			<A />
-			<B />
 		</main>
 	);
 }
