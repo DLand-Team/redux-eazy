@@ -4,8 +4,8 @@ import B from "./components/b";
 import { useFlat } from "./service";
 
 function App() {
-	const { setAppInfo } = useFlat("appStore");
-	const { setInfo } = useFlat("authStore");
+	const { setAppInfo, } = useFlat("appStore");
+	const { setInfo ,testAct} = useFlat("authStore");
 	return (
 		<div className="App">
 			<header className="App-header">

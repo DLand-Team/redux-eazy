@@ -1,6 +1,6 @@
 {
 	"name": "redux-eazy",
-	"version": "0.0.2",
+	"version": "0.0.5",
 	"description": "redux eazy",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
