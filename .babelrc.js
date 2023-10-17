@@ -12,7 +12,6 @@ module.exports = {
 				corejs: { version: "3.20.2", proposals: true }
 			},
 		],
-		["@babel/preset-react"],
 		["@babel/preset-typescript"],
 	],
 };

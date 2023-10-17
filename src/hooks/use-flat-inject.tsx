@@ -7,18 +7,17 @@ import {
 } from "@reduxjs/toolkit";
 import { ToolkitStore } from "@reduxjs/toolkit/dist/configureStore";
 import { useMemo } from "react";
-import { UnParams } from "../utils/awsomeDispatch";
 import useAppSelector from "./use-app-selector";
 
 export type PromiseType<T> = Promise<T>;
 export type UnPromisify<T> = T extends PromiseType<infer U> ? U : never;
 export type UnPayload<T> = T extends (
-	arg: any,
+	arg: any
 ) => AsyncThunkAction<infer U, any, any>
 	? U
 	: never;
 export type UnReturn<T> = T extends (
-	arg: any,
+	arg: any
 ) => AsyncThunkAction<any, any, any>
 	? ReturnType<T>
 	: never;
@@ -31,16 +30,16 @@ const flatInjectHookCreater = <
 					unknown,
 					ThunkDispatch<unknown, unknown, AnyAction>,
 					unknown
-				>,
+				>
 			) => void;
 			thunks: { [k in keyof S[key]["thunks"]]: S[key]["thunks"][k] };
 			slice: Slice;
 		};
 	},
-	ReduxStore extends ToolkitStore,
+	ReduxStore extends ToolkitStore
 >(
 	stores: S,
-	reduxStore: ReduxStore,
+	reduxStore: ReduxStore
 ) => {
 	type FlatStore<T extends keyof ReturnType<ReduxStore["getState"]>> = {
 		slices: S[T]["slice"];
@@ -48,7 +47,7 @@ const flatInjectHookCreater = <
 			[K in keyof S[T]["thunks"]]: (
 				payload?: Parameters<S[T]["thunks"][K]> extends any[]
 					? Parameters<S[T]["thunks"][K]>[0]
-					: undefined,
+					: undefined
 			) => Promise<
 				UnPromisify<ReturnType<UnReturn<S[T]["thunks"][K]>>> & {
 					payload: UnPayload<S[T]["thunks"][K]>;
@@ -57,12 +56,12 @@ const flatInjectHookCreater = <
 		} & ReturnType<ReduxStore["getState"]>[T];
 
 	const useFlatInject = <T extends keyof ReturnType<ReduxStore["getState"]>>(
-		storeName: T,
+		storeName: T
 	) => {
 		const storeState = useAppSelector<ReturnType<ReduxStore["getState"]>>()(
 			(state) => {
 				return state[storeName];
-			},
+			}
 		);
 		return useMemo<FlatStore<T>>(() => {
 			const { thunks, slice } = stores[storeName];
