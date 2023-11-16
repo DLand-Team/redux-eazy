@@ -1,9 +1,12 @@
 {
 	"name": "redux-eazy",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"description": "redux eazy",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
+	"files": [
+		"dist"
+	],
 	"scripts": {
 		"build": "rimraf dist && tsc",
 		"pub": "yarn build && yarn publish",
@@ -12,9 +15,6 @@
 		"test": "jest --silent",
 		"test:report": "jest --coverage  --silent"
 	},
-	"files": [
-		"dist"
-	],
 	"keywords": [
 		"react",
 		"redux"
