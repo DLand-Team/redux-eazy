@@ -88,7 +88,6 @@ const flatInjectHookCreater = <
 						return reduxStore
 							.dispatch(thk(payload))
 							.then((res: any) => {
-								debugger;
 								if (res.error) {
 									throw new Error();
 								} else {
