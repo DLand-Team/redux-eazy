@@ -103,8 +103,8 @@ importers:
         specifier: 5.0.1
         version: 5.0.1(@babel/plugin-syntax-flow@7.22.5)(@babel/plugin-transform-react-jsx@7.22.15)(eslint@8.51.0)(react@18.2.0)(typescript@4.9.5)
       redux-eazy:
-        specifier: ^0.0.3
-        version: 0.0.3
+        specifier: 0.0.7
+        version: link:../..
       typescript:
         specifier: ^4.9.5
         version: 4.9.5
@@ -130,8 +130,8 @@ importers:
         specifier: ^8.1.3
         version: 8.1.3(@types/react-dom@18.2.11)(@types/react@18.2.25)(react-dom@18.2.0)(react@18.2.0)(redux@4.2.1)
       redux-eazy:
-        specifier: ^0.0.2
-        version: 0.0.2
+        specifier: 0.0.7
+        version: link:../..
     devDependencies:
       '@types/node':
         specifier: ^20
@@ -170,8 +170,8 @@ importers:
         specifier: ^8.1.3
         version: 8.1.3(@types/react-dom@18.2.11)(@types/react@18.2.25)(react-dom@18.2.0)(react@18.2.0)(redux@4.2.1)
       redux-eazy:
-        specifier: ^0.0.2
-        version: 0.0.2
+        specifier: 0.0.7
+        version: link:../..
     devDependencies:
       '@types/node':
         specifier: ^20
@@ -10367,18 +10367,6 @@ packages:
     dependencies:
       indent-string: 4.0.0
       strip-indent: 3.0.0
-    dev: false
-
-  /redux-eazy@0.0.2:
-    resolution: {integrity: sha512-sxGsu45LdezYQTx6PQnRxiDFnCSN5uUtwIN5LUKv7P7aCWK3t/KIBkzKN4e2081GU5vljF5OUjLqOMUX/pMVqA==}
-    dependencies:
-      redux-logger: 3.0.6
-    dev: false
-
-  /redux-eazy@0.0.3:
-    resolution: {integrity: sha512-i3mWUutL2v6Nj2D3PB+4kh2lj9GM9imOcXhub48mA55MTq3VZoiln4NaeN2iUFDeXQce8yWFhf3LKWLWUtYbfw==}
-    dependencies:
-      redux-logger: 3.0.6
     dev: false
 
   /redux-logger@3.0.6:

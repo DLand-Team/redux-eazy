@@ -1,11 +1,11 @@
 import {
-  createStore,
-  flatInjectHookCreater,
-  getActionTypeCreater,
-  getDp,
-  resetReduxHookCreater,
-} from 'redux-eazy';
-import { stores } from './stores';
+	createStore,
+	flatInjectHookCreater,
+	getActionTypeCreater,
+	getDp,
+	resetReduxHookCreater,
+} from "redux-eazy";
+import { stores } from "./stores";
 
 // 前置基本
 export const getActionType = getActionTypeCreater(stores);
