@@ -54,7 +54,7 @@ export const getDp = <
 			...stores[storeName]["thunks"],
 			...stores[storeName]["slice"]["actions"],
 		} as any;
-		reduxStore.dispatch(thunks[actionName](payload || {}));
+		reduxStore.dispatch(thunks[actionName](payload));
 	};
 	return dp;
 };
