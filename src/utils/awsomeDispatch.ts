@@ -37,18 +37,24 @@ export const getDp = <
 ) => {
 	const dp = <
 		T extends keyof typeof stores,
-		K extends keyof ((typeof stores)[T]["thunks"] &
-			(typeof stores)[T]["slice"]["actions"]),
+		K extends
+			| keyof ((typeof stores)[T]["thunks"] &
+					(typeof stores)[T]["slice"]["actions"])
+			| "setState",
 	>(
 		storeName: T,
 		actionName: K,
-		payload?: UnParams<
-			K extends keyof (typeof stores)[T]["slice"]["actions"]
-				? (typeof stores)[T]["slice"]["actions"][K]
-				: K extends keyof (typeof stores)[T]["thunks"]
-				? (typeof stores)[T]["thunks"][K]
+		payload?: K extends "setState"
+			? S[T]["slice"] extends Slice<infer U, any, any>
+				? Partial<U>
 				: any
-		>,
+			: UnParams<
+					K extends keyof (typeof stores)[T]["slice"]["actions"]
+						? (typeof stores)[T]["slice"]["actions"][K]
+						: K extends keyof (typeof stores)[T]["thunks"]
+						? (typeof stores)[T]["thunks"][K]
+						: any
+			  >,
 	) => {
 		const thunks = {
 			...stores[storeName]["thunks"],
