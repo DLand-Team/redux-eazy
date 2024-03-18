@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declarationMap": true, // 是否生成声明文件map文件（便于调试）
+    "sourceMap":true
+  }
+}

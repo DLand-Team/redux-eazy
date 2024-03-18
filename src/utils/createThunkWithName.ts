@@ -20,10 +20,13 @@ declare type AsyncThunkConfig = {
   rejectedMeta?: unknown;
 };
 
-export const getCreateThunkWithName = <ReduxState, ReduxDispatch extends Dispatch<AnyAction>>(
+export const getCreateThunkWithName = <
+  ReduxState extends any,
+  ReduxDispatch extends Dispatch<AnyAction>
+>(
   sliceName: string
 ) => {
-  return <ThunkArg = void, Returned = void, ThunkApiConfig extends AsyncThunkConfig = {}>(
+  return <ThunkArg = void, Returned = void, ThunkApiConfig extends AsyncThunkConfig = any>(
     name: string,
     creater: AsyncThunkPayloadCreator<
       Returned,
@@ -45,6 +48,6 @@ export const getCreateThunkWithName = <ReduxState, ReduxDispatch extends Dispatc
       state: ReduxState;
       dispatch: ReduxDispatch;
       rejectValue: string;
-    }>()(`${sliceName}/${name}`, creater, options);
+    }>()(`${sliceName}/${name}`, creater, options as any);
   };
 };

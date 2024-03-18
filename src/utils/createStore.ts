@@ -8,7 +8,6 @@ import {
 } from '@reduxjs/toolkit';
 import { ToolkitStore } from '@reduxjs/toolkit/dist/configureStore';
 import { listenerMiddleware, middleware } from '../middleware';
-import { CurriedGetDefaultMiddleware } from '@reduxjs/toolkit/dist/getDefaultMiddleware';
 type StoreSlices<T> = {
   [K in keyof T]: T[K] extends { slice: infer ST }
     ? ST extends { reducer: infer D }
@@ -21,7 +20,7 @@ const createStore = <
   ST extends {
     [key in keyof ST]: ST[key];
   },
-  M extends Middlewares<ST> = ReadonlyArray<Middleware<{}, ST>>,
+  M extends Middlewares<ST> = ReadonlyArray<Middleware<{}, ST>>
 >(
   stores: ST,
   middlewareList?: M
