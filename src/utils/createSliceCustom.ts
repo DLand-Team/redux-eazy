@@ -10,7 +10,7 @@ import {
 type OptionsCustom<
 	State,
 	CaseReducers extends SliceCaseReducers<State>,
-	Name extends string = string
+	Name extends string = string,
 > = Omit<
 	CreateSliceOptions<State, CaseReducers, Name> & { stateInit: () => State },
 	"initialState"
@@ -20,9 +20,9 @@ type OptionsCustom<
 export function createSliceCustom<
 	State,
 	CaseReducers extends SliceCaseReducers<State>,
-	Name extends string = string
+	Name extends string = string,
 >(
-	options: OptionsCustom<State, CaseReducers, Name>
+	options: OptionsCustom<State, CaseReducers, Name>,
 ): Slice<State, CaseReducers, Name> {
 	const { stateInit, reducers: reducersOld, ...rest } = options;
 	return createSlice({
