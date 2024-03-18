@@ -1,0 +1,237 @@
+---
+sidebar_position: 1
+---
+
+# Carousel
+
+import BrowserWindow from "@site/src/components/BrowserWindow";
+import CodeBlock from "@theme/CodeBlock";
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import styles from "../markdown-features-tabs-styles.module.css";
+import {
+	Carousel,
+	CarouselDemo,
+	NotifyProvider,
+} from "@site/src/theme/ReactLiveScope/components";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+
+<NotifyProvider>
+ <Tabs
+  defaultValue="Demo"
+  values={[
+    {label: 'Demo', value: 'Demo'},
+    {label: 'PlayGround', value: 'PlayGround'},
+  ]}>
+  <TabItem value="PlayGround">
+
+```jsx live noInline
+const imgeList = [
+	"https://qiniu.moderate.run/img/20220831081227.png",
+	"https://qiniu.moderate.run/img/QQ20230420-204615%402x.png",
+	"https://qiniu.moderate.run/img/QQ20230420-205004%402x.png",
+	"https://qiniu.moderate.run/img/20220831081227.png",
+	"https://qiniu.moderate.run/img/QQ20230420-204615%402x.png",
+	"https://qiniu.moderate.run/img/QQ20230420-205004%402x.png",
+	"https://qiniu.moderate.run/img/20220831081227.png",
+	"https://qiniu.moderate.run/img/QQ20230420-204615%402x.png",
+	"https://qiniu.moderate.run/img/QQ20230420-205004%402x.png",
+];
+
+function MyPlayground() {
+	const slides = imgeList.map((slide) => ({
+		src: slide,
+	}));
+
+	let carouselBase = useCarousel(
+		slides.length > 5
+			? {
+					dots: true,
+					infinite: true,
+					speed: 500,
+					slidesToShow: 5,
+					slidesToScroll: 1,
+			  }
+			: {
+					centerMode: true,
+					slidesToShow: slides.length,
+			  },
+	);
+
+	return (
+		<>
+			<Stack
+				direction="row"
+				justifyContent="space-between"
+				sx={{ mt: 3, mb: 5 }}
+			>
+				<Typography variant="h4">Gallery</Typography>
+				<CarouselArrows
+					spacing={2}
+					onNext={carouselBase.onNext}
+					onPrev={carouselBase.onPrev}
+				/>
+			</Stack>
+
+			<Carousel
+				ref={carouselBase.carouselRef}
+				{...carouselBase.carouselSettings}
+			>
+				{slides.map((slide, index) => (
+					<Box key={index} sx={{ px: 1 }}>
+						<Box
+							sx={{
+								borderRadius: 2,
+								overflow: "hidden",
+								cursor: "pointer",
+							}}
+						>
+							<Image
+								sx={{
+									height: "165px",
+								}}
+								alt={slide.src}
+								src={slide.src}
+								ratio="16/9"
+							/>
+						</Box>
+					</Box>
+				))}
+			</Carousel>
+		</>
+	);
+}
+
+render(<MyPlayground />);
+```
+
+</TabItem>
+<TabItem value="Demo">
+
+<BrowserWindow>
+	<CarouselDemo />
+</BrowserWindow>
+
+</TabItem>
+</Tabs>
+</NotifyProvider>
+
+<details>
+  <summary>show code</summary>
+<Tabs>
+<TabItem value="componennt">
+
+```tsx {5,8,12,41-61} showLineNumbers
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { Carousel, CarouselArrows, Image, useCarousel } from "mui-eazy";
+import { imgeList } from "./data";
+// ----------------------------------------------------------------------
+export default function MarketingCaseStudyDetailsGallery() {
+	const slides = imgeList.map((slide) => ({
+		src: slide,
+	}));
+
+	const carousel = useCarousel(
+		slides.length > 5
+			? {
+					dots: true,
+					infinite: true,
+					speed: 500,
+					slidesToShow: 5,
+					slidesToScroll: 1,
+			  }
+			: {
+					centerMode: true,
+					slidesToShow: slides.length,
+			  },
+	);
+
+	return (
+		<>
+			<Stack
+				direction="row"
+				justifyContent="space-between"
+				sx={{ mt: 3, mb: 5 }}
+			>
+				<Typography variant="h4">Gallery</Typography>
+				<CarouselArrows
+					spacing={2}
+					onNext={carousel.onNext}
+					onPrev={carousel.onPrev}
+				/>
+			</Stack>
+
+			<Carousel ref={carousel.carouselRef} {...carousel.carouselSettings}>
+				{slides.map((slide, index) => (
+					<Box key={index} sx={{ px: 1 }}>
+						<Box
+							sx={{
+								borderRadius: 2,
+								overflow: "hidden",
+								cursor: "pointer",
+							}}
+						>
+							<Image
+								sx={{
+									height: "165px",
+								}}
+								alt={slide.src}
+								src={slide.src}
+								ratio="16/9"
+							/>
+						</Box>
+					</Box>
+				))}
+			</Carousel>
+		</>
+	);
+}
+```
+
+</TabItem>
+<TabItem value="data">
+
+```tsx {61-68} showLineNumbers
+export const imgeList = [
+	"https://qiniu.moderate.run/img/20220831081227.png",
+	"https://qiniu.moderate.run/img/QQ20230420-204615%402x.png",
+	"https://qiniu.moderate.run/img/QQ20230420-205004%402x.png",
+	"https://qiniu.moderate.run/img/20220831081227.png",
+	"https://qiniu.moderate.run/img/QQ20230420-204615%402x.png",
+	"https://qiniu.moderate.run/img/QQ20230420-205004%402x.png",
+	"https://qiniu.moderate.run/img/20220831081227.png",
+	"https://qiniu.moderate.run/img/QQ20230420-204615%402x.png",
+	"https://qiniu.moderate.run/img/QQ20230420-205004%402x.png",
+];
+```
+
+</TabItem>
+</Tabs>
+
+</details>
+
+## Props {#npm2yarn-remark-plugin-configuration}
+
+:::tip tip
+
+-   Type: any, can be customized as needed.
+-   Default value:
+    -   Not specified: optional.
+    -   Specified as "require": mandatory.
+-   Type link: Click to navigate to the details below.
+
+:::
+
+| Option           | Type      | Default | Description                              |
+| ---------------- | --------- | ------- | ---------------------------------------- |
+| `ref`            | `ref`     |         | dom ref                                  |
+| `slidesToShow`   | number    |         | the sum of cards to show                 |
+| `slidesToScroll` | number    |         | the num of cards to carousel by one step |
+| `speed`          | `number`  |         | speed of carousel                        |
+| `infinite`       | `boolean` |         | loop carousel                            |
+
+## Type

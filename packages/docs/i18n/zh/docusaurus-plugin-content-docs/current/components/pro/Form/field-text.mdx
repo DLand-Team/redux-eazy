@@ -1,0 +1,127 @@
+---
+sidebar_position: 1
+---
+
+# Field Text
+
+
+
+import {PropsTable} from '@site/src/components/PropsTable';
+import BrowserWindow from '@site/src/components/BrowserWindow';
+import CodeBlock from '@theme/CodeBlock';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import {FieldTextDemo,FieldTextProps,FormProvider,FieldText,NotifyProvider} from '@site/src/theme/ReactLiveScope/components'
+
+<NotifyProvider>
+ <Tabs
+  defaultValue="Demo"
+  values={[
+    {label: 'Demo', value: 'Demo'},
+    {label: 'PlayGround', value: 'PlayGround'},
+  ]}>
+  <TabItem value="PlayGround">
+
+```jsx live noInline
+const MyPlayground = () => {
+  const formRef = useFormRef({});
+  const { handleSubmit } = formRef;
+  const onSubmit = handleSubmit(() => {
+    notify.success(JSON.stringify(formRef.getValues()));
+  });
+  return (
+    <FormProvider formRef={formRef} onSubmit={onSubmit}>
+      <FieldText name="test" label="Field Text" />
+      <Stack
+        direction="row"
+        sx={{
+          justifyContent: "end",
+        }}>
+        <Button
+          sx={{
+            marginTop: "10px",
+          }}
+          variant="contained"
+          type="submit">
+          {" "}
+          Submit
+        </Button>
+      </Stack>
+    </FormProvider>
+  );
+};
+render(<MyPlayground />);
+```
+
+</TabItem>
+<TabItem value="Demo">
+
+<BrowserWindow>
+  <FieldTextDemo />
+</BrowserWindow>
+
+</TabItem>
+</Tabs>
+</NotifyProvider>
+
+<details>
+  <summary>show code</summary>
+<Tabs>
+<TabItem value="componennt">
+
+```tsx {5,8,12,41-61} showLineNumbers
+import { Button, Stack } from "@mui/material";
+import { NotifyProvider } from "mui-eazy";
+import { useFormRef, FieldText, FormProvider, notify } from "mui-eazy";
+
+export default () => {
+  const formRef = useFormRef({});
+  const { handleSubmit } = formRef;
+  const onSubmit = handleSubmit(() => {
+    notify.success(JSON.stringify(formRef.getValues()));
+  });
+  return (
+    <NotifyProvider>
+      <FormProvider formRef={formRef} onSubmit={onSubmit}>
+        <FieldText name="test" label="Field Text" />
+        <Stack
+          direction="row"
+          sx={{
+            justifyContent: "end",
+          }}>
+          <Button
+            sx={{
+              marginTop: "10px",
+            }}
+            variant="contained"
+            type="submit">
+            {" "}
+            Submit
+          </Button>
+        </Stack>
+      </FormProvider>
+    </NotifyProvider>
+  );
+};
+```
+
+</TabItem>
+</Tabs>
+
+</details>
+
+## Props {#npm2yarn-remark-plugin-configuration}
+
+:::tip tip
+
+- Type: any, can be customized as needed.
+- Default value:
+  - Not specified: optional.
+  - Specified as "require": mandatory.
+- Type link: Click to navigate to the details below.
+
+:::
+
+## Type
+
+<FieldTextProps></FieldTextProps>

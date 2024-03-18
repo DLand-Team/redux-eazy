@@ -1,0 +1,415 @@
+---
+sidebar_position: 1
+---
+
+# Tree
+
+import BrowserWindow from "@site/src/components/BrowserWindow";
+import CodeBlock from "@theme/CodeBlock";
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import styles from "../markdown-features-tabs-styles.module.css";
+import {
+	TreeDemo,
+	TreeProps,
+	NotifyProvider,
+} from "@site/src/theme/ReactLiveScope/components";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+
+<NotifyProvider>
+ <Tabs
+  defaultValue="Demo"
+  values={[
+    {label: 'Demo', value: 'Demo'},
+    {label: 'PlayGround', value: 'PlayGround'},
+  ]}>
+  <TabItem value="PlayGround">
+
+```jsx live noInline
+enum DealType {
+  CAPITAL_RAISING = "capital_raising",
+  EQUITY = "equity",
+  STARTUP_PITCH = "startup_pitch",
+  PARTNERSHIPS = "partnerships",
+  SELL_A_BUSINESS = "sell_a_business",
+}
+const useTreeConfig = (): TreeItemProps => {
+  const [new_draft_type] = useState(DealType.CAPITAL_RAISING);
+  return useMemo(() => {
+    return {
+      depth: 0,
+      label: "Deal Basics",
+      active: true,
+      isCurrent: true,
+      sections: [
+        {
+          depth: 0,
+          label: "Business Details",
+          name: "businessDetails",
+          active: false,
+          type: "object",
+          sections: [
+            {
+              depth: 2,
+              label: "Executive Summary",
+              name: "executive_summary",
+              judeShow: () => {
+                return ![
+                  DealType.SELL_A_BUSINESS,
+                  DealType.PARTNERSHIPS,
+                ].includes(new_draft_type);
+              },
+              active: false,
+            },
+            {
+              depth: 2,
+              label: "Problem / Gap",
+              name: "problem_to_be_solved",
+              judeShow: () => {
+                return ![
+                  DealType.SELL_A_BUSINESS,
+                  DealType.PARTNERSHIPS,
+                ].includes(new_draft_type);
+              },
+              active: false,
+            },
+            {
+              depth: 2,
+              label: "Vision / Strategy",
+              name: "vision",
+              judeShow: () => {
+                return ![
+                  DealType.SELL_A_BUSINESS,
+                  DealType.PARTNERSHIPS,
+                ].includes(new_draft_type);
+              },
+              active: false,
+            },
+            {
+              depth: 2,
+              label: "Product / Service",
+              name: "product",
+              judeShow: () => {
+                return ![
+                  DealType.SELL_A_BUSINESS,
+                  DealType.PARTNERSHIPS,
+                ].includes(new_draft_type);
+              },
+              active: false,
+            },
+            {
+              depth: 2,
+              label: "Traction",
+              name: "traction",
+              judeShow: () => {
+                return ![
+                  DealType.SELL_A_BUSINESS,
+                  DealType.PARTNERSHIPS,
+                ].includes(new_draft_type);
+              },
+              active: false,
+            },
+            {
+              depth: 2,
+              label: "Business Model",
+              name: "business_model",
+              judeShow: () => {
+                return ![
+                  DealType.SELL_A_BUSINESS,
+                  DealType.PARTNERSHIPS,
+                ].includes(new_draft_type);
+              },
+              active: false,
+            },
+          ],
+        },
+        {
+          depth: 0,
+          label: "Market & Competition",
+          name: "marketCompetition",
+          active: false,
+          type: "object",
+          judeShow: () => {
+            return ![DealType.SELL_A_BUSINESS, DealType.PARTNERSHIPS].includes(
+              new_draft_type
+            );
+          },
+          sections: [
+            {
+              depth: 2,
+              label: "Custormers",
+              name: "custormers",
+              active: false,
+            },
+            {
+              depth: 2,
+              label: "Market",
+              name: "market",
+              active: false,
+            },
+            {
+              depth: 2,
+              label: "Competition",
+              name: "competition",
+              active: false,
+            },
+          ],
+        },
+        {
+          depth: 0,
+          label: "Media",
+          name: "media",
+          judeShow: () => {
+            return ![DealType.SELL_A_BUSINESS, DealType.PARTNERSHIPS].includes(
+              new_draft_type
+            );
+          },
+          active: false,
+        },
+        {
+          depth: 0,
+          label: "FAQ",
+          name: "faq",
+          judeShow: () => {
+            return ![DealType.SELL_A_BUSINESS, DealType.PARTNERSHIPS].includes(
+              new_draft_type
+            );
+          },
+          active: false,
+        },
+      ],
+    };
+  }, [new_draft_type]);
+};
+
+const Demo = () => {
+const treeFromConfig = useTreeConfig();
+return <Tree onSwitch={(id, record) => {
+debugger
+}} treeRoot={treeFromConfig} />;
+};
+
+render(<Demo />);
+
+```
+
+</TabItem>
+<TabItem value="Demo">
+
+<BrowserWindow>
+	<TreeDemo />
+</BrowserWindow>
+
+</TabItem>
+</Tabs>
+</NotifyProvider>
+
+<details>
+  <summary>show code</summary>
+<Tabs>
+<TabItem value="componennt">
+
+```tsx {5,8,12,41-61} showLineNumbers
+import { TreeItemProps, Tree } from "mui-eazy";
+import { useMemo, useState } from "react";
+
+//code----------------------
+enum DealType {
+	CAPITAL_RAISING = "capital_raising",
+	EQUITY = "equity",
+	STARTUP_PITCH = "startup_pitch",
+	PARTNERSHIPS = "partnerships",
+	SELL_A_BUSINESS = "sell_a_business",
+}
+const useTreeConfig = (): TreeItemProps => {
+	const [new_draft_type] = useState(DealType.CAPITAL_RAISING);
+	return useMemo(() => {
+		return {
+			depth: 0,
+			label: "Deal Basics",
+			active: true,
+			isCurrent: true,
+			sections: [
+				{
+					depth: 0,
+					label: "Business Details",
+					name: "businessDetails",
+					active: false,
+					type: "object",
+					sections: [
+						{
+							depth: 2,
+							label: "Executive Summary",
+							name: "executive_summary",
+							judeShow: () => {
+								return ![
+									DealType.SELL_A_BUSINESS,
+									DealType.PARTNERSHIPS,
+								].includes(new_draft_type);
+							},
+							active: false,
+						},
+						{
+							depth: 2,
+							label: "Problem / Gap",
+							name: "problem_to_be_solved",
+							judeShow: () => {
+								return ![
+									DealType.SELL_A_BUSINESS,
+									DealType.PARTNERSHIPS,
+								].includes(new_draft_type);
+							},
+							active: false,
+						},
+						{
+							depth: 2,
+							label: "Vision / Strategy",
+							name: "vision",
+							judeShow: () => {
+								return ![
+									DealType.SELL_A_BUSINESS,
+									DealType.PARTNERSHIPS,
+								].includes(new_draft_type);
+							},
+							active: false,
+						},
+						{
+							depth: 2,
+							label: "Product / Service",
+							name: "product",
+							judeShow: () => {
+								return ![
+									DealType.SELL_A_BUSINESS,
+									DealType.PARTNERSHIPS,
+								].includes(new_draft_type);
+							},
+							active: false,
+						},
+						{
+							depth: 2,
+							label: "Traction",
+							name: "traction",
+							judeShow: () => {
+								return ![
+									DealType.SELL_A_BUSINESS,
+									DealType.PARTNERSHIPS,
+								].includes(new_draft_type);
+							},
+							active: false,
+						},
+						{
+							depth: 2,
+							label: "Business Model",
+							name: "business_model",
+							judeShow: () => {
+								return ![
+									DealType.SELL_A_BUSINESS,
+									DealType.PARTNERSHIPS,
+								].includes(new_draft_type);
+							},
+							active: false,
+						},
+					],
+				},
+				{
+					depth: 0,
+					label: "Market & Competition",
+					name: "marketCompetition",
+					active: false,
+					type: "object",
+					judeShow: () => {
+						return ![
+							DealType.SELL_A_BUSINESS,
+							DealType.PARTNERSHIPS,
+						].includes(new_draft_type);
+					},
+					sections: [
+						{
+							depth: 2,
+							label: "Custormers",
+							name: "custormers",
+							active: false,
+						},
+						{
+							depth: 2,
+							label: "Market",
+							name: "market",
+							active: false,
+						},
+						{
+							depth: 2,
+							label: "Competition",
+							name: "competition",
+							active: false,
+						},
+					],
+				},
+				{
+					depth: 0,
+					label: "Media",
+					name: "media",
+					judeShow: () => {
+						return ![
+							DealType.SELL_A_BUSINESS,
+							DealType.PARTNERSHIPS,
+						].includes(new_draft_type);
+					},
+					active: false,
+				},
+				{
+					depth: 0,
+					label: "FAQ",
+					name: "faq",
+					judeShow: () => {
+						return ![
+							DealType.SELL_A_BUSINESS,
+							DealType.PARTNERSHIPS,
+						].includes(new_draft_type);
+					},
+					active: false,
+				},
+			],
+		};
+	}, [new_draft_type]);
+};
+
+const Demo = () => {
+	const treeFromConfig = useTreeConfig();
+	return (
+		<Tree
+			onSwitch={(id, record) => {
+				debugger;
+			}}
+			treeRoot={treeFromConfig}
+		/>
+	);
+};
+```
+
+</TabItem>
+<TabItem value="data">
+
+```tsx {61-68} showLineNumbers
+export const imgeList = [
+	"https://qiniu.moderate.run/img/20220831081227.png",
+	"https://qiniu.moderate.run/img/QQ20230420-204615%402x.png",
+	"https://qiniu.moderate.run/img/QQ20230420-205004%402x.png",
+	"https://qiniu.moderate.run/img/20220831081227.png",
+	"https://qiniu.moderate.run/img/QQ20230420-204615%402x.png",
+	"https://qiniu.moderate.run/img/QQ20230420-205004%402x.png",
+	"https://qiniu.moderate.run/img/20220831081227.png",
+	"https://qiniu.moderate.run/img/QQ20230420-204615%402x.png",
+	"https://qiniu.moderate.run/img/QQ20230420-205004%402x.png",
+];
+```
+
+</TabItem>
+</Tabs>
+
+</details>
+
+## Props {#npm2yarn-remark-plugin-configuration}
+
+<TreeProps />
