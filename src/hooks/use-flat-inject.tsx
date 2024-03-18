@@ -1,5 +1,6 @@
 import {
 	AnyAction,
+	AsyncThunk,
 	AsyncThunkAction,
 	ListenerMiddlewareInstance,
 	Slice,
@@ -16,9 +17,18 @@ export type UnPayload<T> = T extends (
 ) => AsyncThunkAction<infer U, any, any>
 	? U
 	: never;
+export type UnPayload2<T> = T extends (
+	arg: any,
+) => AsyncThunk<infer U, any, any>
+	? U
+	: never;
 export type UnReturn<T> = T extends (
 	arg: any,
 ) => AsyncThunkAction<any, any, any>
+	? ReturnType<T>
+	: never;
+
+export type UnReturn2<T> = T extends (arg: any) => AsyncThunk<any, any, any>
 	? ReturnType<T>
 	: never;
 

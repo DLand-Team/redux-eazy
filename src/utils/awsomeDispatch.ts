@@ -2,19 +2,21 @@ import {
 	ActionCreatorWithPayload,
 	AnyAction,
 	AsyncThunk,
+	AsyncThunkAction,
 	ListenerMiddlewareInstance,
 	Slice,
 	ThunkDispatch,
 } from "@reduxjs/toolkit";
 import { ToolkitStore } from "@reduxjs/toolkit/dist/configureStore";
 
-export type UnParams<T> = T extends AsyncThunk<any, infer U, any>
-	? U
-	: T extends ActionCreatorWithPayload<infer Z, any>
-	? Z
-	: T extends (...args: any) => any
-	? Parameters<T>[0]
-	: any;
+export type UnParams<T> =
+	T extends AsyncThunk<any, infer U, any>
+		? U
+		: T extends ActionCreatorWithPayload<infer Z, any>
+			? Z
+			: T extends (...args: any) => any
+				? Parameters<T>[0]
+				: any;
 
 export const getDp = <
 	T extends ToolkitStore,
@@ -52,15 +54,37 @@ export const getDp = <
 					K extends keyof (typeof stores)[T]["slice"]["actions"]
 						? (typeof stores)[T]["slice"]["actions"][K]
 						: K extends keyof (typeof stores)[T]["thunks"]
-						? (typeof stores)[T]["thunks"][K]
-						: any
-			  >,
-	) => {
+							? (typeof stores)[T]["thunks"][K]
+							: any
+				>,
+	): K extends keyof (typeof stores)[T]["thunks"]
+		? Promise<
+				{
+					payload: (typeof stores)[T]["thunks"][K] extends (
+						arg: any,
+					) => AsyncThunkAction<infer U, any, any>
+						? U
+						: any;
+				} & { error?: any }
+			>
+		: void => {
 		const thunks = {
 			...stores[storeName]["thunks"],
 			...stores[storeName]["slice"]["actions"],
 		} as any;
-		reduxStore.dispatch(thunks[actionName](payload));
+		return reduxStore
+			.dispatch(thunks[actionName](payload))
+			.then?.((res: any) => {
+				if (res.error) {
+					let error = new Error(res.error.message);
+					error.stack = res.error.stack;
+					error.name = res.error.name;
+					error.message = res.error.message;
+					throw error;
+				} else {
+					return res;
+				}
+			});
 	};
 	return dp;
 };
