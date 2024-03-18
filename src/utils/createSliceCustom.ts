@@ -1,5 +1,6 @@
 import {
 	CreateSliceOptions,
+	PayloadAction,
 	Slice,
 	SliceCaseReducers,
 	createSlice,
@@ -24,9 +25,19 @@ export function createSliceCustom<
 	options: OptionsCustom<State, CaseReducers, Name>,
 ): Slice<State, CaseReducers, Name> {
 	const { stateInit, reducers: reducersOld, ...rest } = options;
-	let reducers = {
-		...reducersOld,
-		reset: stateInit,
-	};
-	return createSlice({ ...rest, reducers, initialState: stateInit });
+	return createSlice({
+		...rest,
+		reducers: {
+			...reducersOld,
+			reset: stateInit,
+			setState(state, action: PayloadAction<Partial<State>>) {
+				const { payload } = action;
+				return {
+					...state,
+					...payload,
+				};
+			},
+		},
+		initialState: stateInit,
+	});
 }
