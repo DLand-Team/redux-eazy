@@ -117,7 +117,7 @@ const flatInjectHookCreater = <
 				...thunkArr,
 				...actionArr,
 			} as any;
-		}, [storeState]);
+		}, [storeState, reduxStore]);
 	};
 	return useFlatInject;
 };
