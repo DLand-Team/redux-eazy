@@ -8,6 +8,7 @@ import {
 } from "@reduxjs/toolkit";
 import { ToolkitStore } from "@reduxjs/toolkit/dist/configureStore";
 import { useMemo } from "react";
+import useAppSelector from "./use-app-selector";
 // import useAppSelector from "./use-app-selector";
 
 export type PromiseType<T> = Promise<T>;
@@ -68,7 +69,11 @@ const flatInjectHookCreater = <
 	const useFlatInject = <T extends keyof ReturnType<ReduxStore["getState"]>>(
 		storeName: T,
 	) => {
-		const storeState = reduxStore.getState()[storeName];
+		const storeState = useAppSelector<ReturnType<ReduxStore["getState"]>>()(
+			(state) => {
+				return state[storeName];
+			},
+		);
 		return useMemo<FlatStore<T>>(() => {
 			const { thunks, slice } = stores[storeName];
 			let sliceTemp = slice;

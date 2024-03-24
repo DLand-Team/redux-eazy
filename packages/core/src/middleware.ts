@@ -20,5 +20,4 @@ const middleware = [
   }),
 ];
 
-export type ListenerMiddleware = typeof listenerMiddleware;
 export { listenerMiddleware, middleware };
