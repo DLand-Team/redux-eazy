@@ -48,7 +48,7 @@ export const getDp = <
 		actionName: K,
 		payload?: K extends "setState"
 			? S[T]["slice"] extends Slice<infer U, any, any>
-				? U
+				? Partial<U>
 				: any
 			: UnParams<
 					K extends keyof (typeof stores)[T]["slice"]["actions"]
