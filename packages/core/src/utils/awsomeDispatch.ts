@@ -42,7 +42,8 @@ export const getDp = <
 		K extends
 			| keyof ((typeof stores)[T]["thunks"] &
 					(typeof stores)[T]["slice"]["actions"])
-			| "setState",
+			| "setState"
+			| "reset",
 	>(
 		storeName: T,
 		actionName: K,
