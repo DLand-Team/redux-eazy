@@ -67,7 +67,6 @@ const config: Config = {
 			} satisfies Preset.Options,
 		],
 	],
-	themes: ["@docusaurus/theme-live-codeblock"],
 	themeConfig: {
 		algolia: {
 			// The application ID provided by Algolia
