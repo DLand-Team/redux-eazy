@@ -1,9 +1,10 @@
 /* Core */
 import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { createLogger } from "redux-logger";
+import Redux from "redux";
 const listenerMiddleware = createListenerMiddleware();
 
-const middleware = [
+const middleware: Redux.Middleware[] = [
 	listenerMiddleware.middleware,
 	createLogger({
 		duration: true,
@@ -17,7 +18,7 @@ const middleware = [
 			error: () => "#ff0005",
 		},
 		predicate: () => typeof window !== "undefined",
-	}),
+	}) as Redux.Middleware,
 ];
 
 export { listenerMiddleware, middleware };

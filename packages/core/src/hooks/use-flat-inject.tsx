@@ -1,15 +1,20 @@
 import {
-	AnyAction,
+	Action,
 	AsyncThunk,
 	AsyncThunkAction,
 	ListenerMiddlewareInstance,
 	Slice,
 	ThunkDispatch,
 } from "@reduxjs/toolkit";
-import { ToolkitStore } from "@reduxjs/toolkit/dist/configureStore";
-import { useMemo } from "react";
+import { EnhancedStore } from "@reduxjs/toolkit/dist/configureStore";
 import useAppSelector from "./use-app-selector";
-// import useAppSelector from "./use-app-selector";
+import { shallowEqual } from "react-redux";
+// type TupleHead<T extends any[]> = T[number];
+export type L2T<L, LAlias = L, LAlias2 = L> = [L] extends [never]
+	? []
+	: L extends infer LItem
+		? [LItem?, ...L2T<Exclude<LAlias2, LItem>, LAlias>]
+		: never;
 
 export type PromiseType<T> = Promise<T>;
 export type UnPromisify<T> = T extends PromiseType<infer U> ? U : never;
@@ -39,7 +44,7 @@ const flatInjectHookCreater = <
 			watch: (
 				listenerMiddleware: ListenerMiddlewareInstance<
 					unknown,
-					ThunkDispatch<unknown, unknown, AnyAction>,
+					ThunkDispatch<unknown, unknown, Action>,
 					unknown
 				>,
 			) => void;
@@ -47,14 +52,18 @@ const flatInjectHookCreater = <
 			slice: Slice;
 		};
 	},
-	ReduxStore extends ToolkitStore,
+	ReduxStore extends EnhancedStore,
 >(
 	stores: S,
 	reduxStore: ReduxStore,
 ) => {
-	type FlatStore<T extends keyof ReturnType<ReduxStore["getState"]>> = {
+	type FlatStore<
+		T extends keyof ReturnType<ReduxStore["getState"]>,
+		P extends keyof ReturnType<ReduxStore["getState"]>[T],
+	> = {
 		slices: S[T]["slice"];
-	} & S[T]["slice"]["actions"] & {
+	} & S[T]["slice"]["actions"] &
+		S[T]["slice"]["selectors"] & {
 			[K in keyof S[T]["thunks"]]: (
 				payload?: Parameters<S[T]["thunks"][K]> extends any[]
 					? Parameters<S[T]["thunks"][K]>[0]
@@ -64,61 +73,76 @@ const flatInjectHookCreater = <
 					payload: UnPayload<S[T]["thunks"][K]>;
 				} & { error?: any }
 			>;
-		} & ReturnType<ReduxStore["getState"]>[T];
+		} & Pick<ReturnType<ReduxStore["getState"]>[T], P>;
 
-	const useFlatInject = <T extends keyof ReturnType<ReduxStore["getState"]>>(
+	const useFlatInject = <
+		S extends keyof ReturnType<ReduxStore["getState"]>[T],
+		T extends keyof ReturnType<ReduxStore["getState"]> = keyof ReturnType<
+			ReduxStore["getState"]
+		>,
+		Keys extends L2T<keyof ReturnType<ReduxStore["getState"]>[T]> = L2T<
+			keyof ReturnType<ReduxStore["getState"]>[T]
+		>,
+	>(
 		storeName: T,
+		keys?: Keys,
 	) => {
 		const storeState = useAppSelector<ReturnType<ReduxStore["getState"]>>()(
 			(state) => {
+				if (keys) {
+					let result = {};
+					keys.forEach((key) => {
+						result[key] = state[storeName][key];
+					});
+					return result;
+				}
 				return state[storeName];
 			},
+			shallowEqual,
 		);
-		return useMemo<FlatStore<T>>(() => {
-			const { thunks, slice } = stores[storeName];
-			let sliceTemp = slice;
-			let thunkArr = {};
-			let actionArr = {};
-			for (let key in sliceTemp.actions) {
-				let act = sliceTemp.actions[
-					key as keyof typeof sliceTemp.actions
-				] as any;
-				actionArr = {
-					...actionArr,
-					[key]: (payload: never) => {
-						return reduxStore.dispatch(act(payload));
-					},
-				};
-			}
-			for (let key in thunks) {
-				let thk = thunks[key as keyof typeof thunks] as any;
-
-				thunkArr = {
-					...thunkArr,
-					[key]: (payload: never) => {
-						return reduxStore
-							.dispatch(thk(payload))
-							.then((res: any) => {
-								if (res.error) {
-									let error = new Error(res.error.message);
-									error.stack = res.error.stack;
-									error.name = res.error.name;
-									error.message = res.error.message;
-									throw error;
-								} else {
-									return res;
-								}
-							});
-					},
-				};
-			}
-			return {
-				slices: sliceTemp,
-				...storeState,
-				...thunkArr,
+		const { thunks, slice } = stores[storeName];
+		let sliceTemp = slice;
+		let thunkArr = {};
+		let actionArr = {};
+		for (let key in sliceTemp.actions) {
+			let act = sliceTemp.actions[
+				key as keyof typeof sliceTemp.actions
+			] as any;
+			actionArr = {
 				...actionArr,
-			} as any;
-		}, [storeState, reduxStore]);
+				[key]: (payload: never) => {
+					return reduxStore.dispatch(act(payload));
+				},
+			};
+		}
+		for (let key in thunks) {
+			let thk = thunks[key as keyof typeof thunks] as any;
+			thunkArr = {
+				...thunkArr,
+				[key]: (payload: never) => {
+					return reduxStore
+						.dispatch(thk(payload))
+						.then((res: any) => {
+							if (res.error) {
+								let error = new Error(res.error.message);
+								error.stack = res.error.stack;
+								error.name = res.error.name;
+								error.message = res.error.message;
+								throw error;
+							} else {
+								return res;
+							}
+						});
+				},
+			};
+		}
+		return {
+			slices: sliceTemp,
+			...slice.selectors,
+			...storeState,
+			...thunkArr,
+			...actionArr,
+		} as FlatStore<T, S>;
 	};
 	return useFlatInject;
 };

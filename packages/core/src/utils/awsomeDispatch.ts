@@ -7,7 +7,7 @@ import {
 	Slice,
 	ThunkDispatch,
 } from "@reduxjs/toolkit";
-import { ToolkitStore } from "@reduxjs/toolkit/dist/configureStore";
+import { EnhancedStore } from "@reduxjs/toolkit/dist/configureStore";
 
 export type UnParams<T> =
 	T extends AsyncThunk<any, infer U, any>
@@ -19,7 +19,7 @@ export type UnParams<T> =
 				: any;
 
 export const getDp = <
-	T extends ToolkitStore,
+	T extends EnhancedStore,
 	S extends {
 		[key in keyof ReturnType<T["getState"]>]: {
 			watch: (
