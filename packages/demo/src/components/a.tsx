@@ -1,6 +1,10 @@
 import { useFlat } from "../service";
 
 const A = () => {
-	return <div>A:{}</div>;
+	return (
+		<div>
+			<input></input>
+		</div>
+	);
 };
 export default A;

@@ -1,5 +1,5 @@
 {
-	"name": "redux-eazy-docs",
+	"name": "my-website",
 	"version": "0.0.0",
 	"private": true,
 	"scripts": {
@@ -7,7 +7,7 @@
 		"start": "docusaurus start",
 		"build": "docusaurus build",
 		"swizzle": "docusaurus swizzle",
-		"deploy": "cross-env USE_SSH=true docusaurus deploy",
+		"deploy": "docusaurus deploy",
 		"clear": "docusaurus clear",
 		"serve": "docusaurus serve",
 		"write-translations": "docusaurus write-translations",
@@ -15,42 +15,22 @@
 		"typecheck": "tsc"
 	},
 	"dependencies": {
-		"@docusaurus/core": "3.0.0",
-		"@docusaurus/preset-classic": "3.0.0",
-		"@docusaurus/theme-live-codeblock": "3.0.0",
-		"@emotion/react": "^11.5.0",
-		"@emotion/styled": "^11.5.0",
+		"@docusaurus/core": "3.4.0",
+		"@docusaurus/preset-classic": "3.4.0",
 		"@mdx-js/react": "^3.0.0",
-		"@mui/lab": "^5.0.0-alpha.142",
-		"@mui/material": "^5.15.5",
-		"@mui/system": "^5.15.5",
-		"@mui/x-data-grid": "^6.0.0",
-		"@mui/x-date-pickers": "^6.0.0",
-		"@types/react": "^18.0.0",
-		"clsx": "^1.2.1",
-		"color": "^4.2.3",
-		"cross-env": "^7.0.3",
-		"dayjs": "^1.11.10",
+		"clsx": "^2.0.0",
 		"docusaurus-plugin-sass": "^0.2.5",
-		"framer-motion": "^10.16.4",
-		"monaco-editor": "^0.45.0",
-		"monaco-editor-webpack-plugin": "^7.1.0",
-		"mui-eazy": "^0.0.18",
-		"prettier": "^3.0.3",
-		"prism-react-renderer": "^2.1.0",
-		"react": "^18.2.0",
+		"prism-react-renderer": "^2.3.0",
+		"react": "^18.0.0",
 		"react-dom": "^18.0.0",
-		"react-live": "^4.1.5",
-		"sass": "^1.70.0",
-		"yup": "^1.2.0"
+		"sass": "^1.72.0"
 	},
 	"devDependencies": {
-		"@docusaurus/module-type-aliases": "3.0.0",
-		"@docusaurus/tsconfig": "3.0.0",
-		"@docusaurus/types": "3.0.0",
-		"@types/node": "^20.5.7",
-		"config-webpack": "file:plugins/config-webpack",
-		"typescript": "~5.2.2"
+		"@docusaurus/module-type-aliases": "3.4.0",
+		"@docusaurus/tsconfig": "3.4.0",
+		"@docusaurus/types": "3.4.0",
+		"typescript": "~5.2.2",
+		"config-webpack": "file:plugins/config-webpack"
 	},
 	"browserslist": {
 		"production": [

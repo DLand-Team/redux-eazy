@@ -5,7 +5,7 @@ import type * as Preset from "@docusaurus/preset-classic";
 const config: Config = {
 	title: "Redux Eazy",
 	tagline: "Redux Eazy are cool",
-	favicon: "img/favicon.ico",
+	favicon: "img/redux-eazy-logo.png",
 	// Set the production url of your site here
 	url: "https://dland-core.github.io",
 	// Set the /<baseUrl>/ pathname under which your site is served
@@ -22,27 +22,27 @@ const config: Config = {
 	// Even if you don't use internationalization, you can use this field to set
 	// useful metadata like html lang. For example, if your site is Chinese, you
 	// may want to replace "en" with "zh-Hans".
-	i18n: {
-		defaultLocale: "en",
-		locales: ["en", "zh"],
-		path: "i18n",
-		localeConfigs: {
-			en: {
-				label: "English",
-				direction: "ltr",
-				htmlLang: "en-US",
-				calendar: "gregory",
-				path: "en",
-			},
-			zh: {
-				label: "中文",
-				direction: "ltr",
-				htmlLang: "zh-CN",
-				calendar: "gregory",
-				path: "zh",
-			},
-		},
-	},
+	// i18n: {
+	// 	defaultLocale: "zh",
+	// 	locales: ["en", "zh"],
+	// 	path: "i18n",
+	// 	localeConfigs: {
+	// 		en: {
+	// 			label: "English",
+	// 			direction: "ltr",
+	// 			htmlLang: "en-US",
+	// 			calendar: "gregory",
+	// 			path: "en",
+	// 		},
+	// 		zh: {
+	// 			label: "中文",
+	// 			direction: "ltr",
+	// 			htmlLang: "zh-CN",
+	// 			calendar: "gregory",
+	// 			path: "zh",
+	// 		},
+	// 	},
+	// },
 	presets: [
 		[
 			"classic",
@@ -104,16 +104,12 @@ const config: Config = {
 		// Replace with your project's social card
 		image: "img/docusaurus-social-card.jpg",
 		navbar: {
-			title: "Mui Eazy",
+			title: "Redux Eazy",
 			logo: {
 				alt: "My Site Logo",
-				src: "img/logo.svg",
+				src: "img/redux-eazy-logo.png",
 			},
 			items: [
-				{
-					type: "localeDropdown",
-					position: "right",
-				},
 				{
 					type: "docSidebar",
 					sidebarId: "tutorialSidebar",
@@ -178,7 +174,7 @@ const config: Config = {
 			darkTheme: prismThemes.dracula,
 		},
 	} satisfies Preset.ThemeConfig,
-	plugins: ["config-webpack", "docusaurus-plugin-sass"],
+	plugins: ["docusaurus-plugin-sass"],
 };
 
 export default config;

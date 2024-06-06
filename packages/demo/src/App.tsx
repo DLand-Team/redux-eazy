@@ -1,25 +1,19 @@
-import "./App.css";
-import A from "./components/a";
-import { dp, useFlat } from "./service";
+import { dp, reduxStore, useFlatStore } from "./service";
 
 function App() {
-	const { setPageList } = useFlat("appStore");
+	const { title, setTitle, queryAct } = useFlatStore("appStore");
+	queryAct().then((a) => {
+		debugger;
+		a.payload
+	});
 	return (
-		<div className="App">
-			<header className="App-header">
-				<div>
-					<A></A>
-					<button onClick={() => {}}>btn1</button>
-				</div>
-				<a
-					className="App-link"
-					href="https://github.com/DLand-Team"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					闲D岛🏝️
-				</a>
-			</header>
+		<div>
+			<div
+				onClick={() => {
+					setTitle(Date.now().toString());
+				}}
+			></div>
+			{title}
 		</div>
 	);
 }

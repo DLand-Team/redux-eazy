@@ -1,13 +1,10 @@
+import Link from "@docusaurus/Link";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import HomepageFeatures from "@site/src/components/HomepageFeatures";
-import Logo from "@site/static/img/logo.svg";
 import Layout from "@theme/Layout";
 import styles from "./index.module.scss";
-import Link from "@docusaurus/Link";
 
 function HomepageHeader() {
-	const { siteConfig } = useDocusaurusContext();
-	debugger;
 	return (
 		<header className={styles.heroBanner}>
 			<div
@@ -43,7 +40,13 @@ function HomepageHeader() {
 						<div className={styles.image}>
 							<div className={styles.imageContainer}>
 								<div className={styles.imageBg}></div>
-								<Logo className={styles.logo}></Logo>
+								<img
+									className={styles.logoImg}
+									src={
+										require("@site/static/img/redux-eazy-logo.png")
+											.default
+									}
+								/>
 							</div>
 						</div>
 					</div>

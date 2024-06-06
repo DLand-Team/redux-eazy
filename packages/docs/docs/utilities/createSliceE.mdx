@@ -1,19 +1,18 @@
-import { createSliceE, PayloadAction } from "redux-eazy";
-import names from "../names";
-import { Pagination, QueryApiRes, SliceState } from "./model";
+---
+sidebar_position: 2
+---
 
-const initialState = (): SliceState => {
-	return {
-		title: "test",
-		dataList: [],
-		pagination: {
-			pageNum: 1,
-			pageSize: 1,
-			total: 0,
-		},
-	};
-};
+# createSliceE
 
+跟官方`createSlice`基本用法一致，替代使用以支持强化后的功能。
+
+不同之处就是加入了`stateInit`函数替代`initialState`来配置状态库的**state集合**
+
+目的就是可以支持初始化操作，同时借助函数的特性能够实现更动态的操作。
+
+## 用法
+
+```ts
 const slice = createSliceE({
 	name: names.appStore,
 	stateInit: initialState,
@@ -37,5 +36,4 @@ const slice = createSliceE({
 		},
 	},
 });
-
-export default slice;
+```

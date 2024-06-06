@@ -153,8 +153,11 @@
 		height: 320px;
 		position: absolute;
 		border-radius: 50%;
-		background-image: linear-gradient(-45deg, #cf5256 50%, #15a5de 50%);
+		background-image: linear-gradient(-45deg, #ed9f0e9d 50%, #15a5dea2 50%);
 		filter: blur(68px);
+	}
+	.logoImg {
+		width: 80%;
 	}
 
 	.title {

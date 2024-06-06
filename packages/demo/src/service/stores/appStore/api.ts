@@ -1,9 +1,14 @@
-function geoQueryApi(params: { id: string }) {
-	return Promise.resolve({ data: { info: "yes" } });
-}
+import { QueryApiParams, QueryApiRes } from "./model";
 
 const api = {
-	geoQueryApi,
+	queryApi(params: QueryApiParams) {
+		return Promise.resolve<QueryApiRes>({
+			data: {
+				list: [{ id: 1, title: "item1" }],
+				total: 100,
+			},
+		});
+	},
 };
 
 export default api;
