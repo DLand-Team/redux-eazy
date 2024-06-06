@@ -4,7 +4,7 @@
   <ShortName>Redux Eazy</ShortName>
   <Description>Search Redux Eazy</Description>
   <InputEncoding>UTF-8</InputEncoding>
-  <Image width="16" height="16" type="image/x-icon">https://dland-team.github.io/redux-eazy/img/redux-eazy-logo.svg</Image>
+  <Image width="16" height="16" type="image/x-icon">https://dland-team.github.io/redux-eazy/img/redux-eazy-logo.png</Image>
   <Url type="text/html" method="get" template="https://dland-team.github.io/redux-eazy/search?q={searchTerms}"/>
   <Url type="application/opensearchdescription+xml" rel="self" template="https://dland-team.github.io/redux-eazy/opensearch.xml" />
   <moz:SearchForm>https://dland-team.github.io/redux-eazy/</moz:SearchForm>
