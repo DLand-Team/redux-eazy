@@ -5,7 +5,7 @@ import {
 	Slice,
 	ThunkDispatch,
 } from "@reduxjs/toolkit";
-import { EnhancedStore } from "@reduxjs/toolkit/dist/configureStore";
+import { EnhancedStore } from "@reduxjs/toolkit";
 
 export const getActionTypeCreater = <
 	ReduxStore extends EnhancedStore,

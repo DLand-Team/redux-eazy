@@ -7,7 +7,7 @@ import {
 	Slice,
 	ThunkDispatch,
 } from "@reduxjs/toolkit";
-import { EnhancedStore } from "@reduxjs/toolkit/dist/configureStore";
+import { EnhancedStore } from "@reduxjs/toolkit";
 
 export type UnParams<T> =
 	T extends AsyncThunk<any, infer U, any>

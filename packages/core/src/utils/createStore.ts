@@ -6,7 +6,7 @@ import {
 	ThunkDispatch,
 	configureStore,
 } from "@reduxjs/toolkit";
-import { EnhancedStore } from "@reduxjs/toolkit/dist/configureStore";
+import { EnhancedStore } from "@reduxjs/toolkit";
 import { listenerMiddleware, middleware } from "../middleware";
 type StoreSlices<T> = {
 	[K in keyof T]: T[K] extends { slice: infer ST }

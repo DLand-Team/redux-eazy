@@ -6,30 +6,30 @@ import {
 	Slice,
 	ThunkDispatch,
 } from "@reduxjs/toolkit";
-import { EnhancedStore } from "@reduxjs/toolkit/dist/configureStore";
+import { EnhancedStore } from "@reduxjs/toolkit";
 import useAppSelector from "./use-app-selector";
 import { shallowEqual } from "react-redux";
 // type TupleHead<T extends any[]> = T[number];
 export type L2T<L, LAlias = L, LAlias2 = L> = [L] extends [never]
 	? []
 	: L extends infer LItem
-		? [LItem?, ...L2T<Exclude<LAlias2, LItem>, LAlias>]
-		: never;
+	? [LItem?, ...L2T<Exclude<LAlias2, LItem>, LAlias>]
+	: never;
 
 export type PromiseType<T> = Promise<T>;
 export type UnPromisify<T> = T extends PromiseType<infer U> ? U : never;
 export type UnPayload<T> = T extends (
-	arg: any,
+	arg: any
 ) => AsyncThunkAction<infer U, any, any>
 	? U
 	: never;
 export type UnPayload2<T> = T extends (
-	arg: any,
+	arg: any
 ) => AsyncThunk<infer U, any, any>
 	? U
 	: never;
 export type UnReturn<T> = T extends (
-	arg: any,
+	arg: any
 ) => AsyncThunkAction<any, any, any>
 	? ReturnType<T>
 	: never;
@@ -46,20 +46,20 @@ const flatInjectHookCreater = <
 					unknown,
 					ThunkDispatch<unknown, unknown, Action>,
 					unknown
-				>,
+				>
 			) => void;
 			thunks: { [k in keyof S[key]["thunks"]]: S[key]["thunks"][k] };
 			slice: Slice;
 		};
 	},
-	ReduxStore extends EnhancedStore,
+	ReduxStore extends EnhancedStore
 >(
 	stores: S,
-	reduxStore: ReduxStore,
+	reduxStore: ReduxStore
 ) => {
 	type FlatStore<
 		T extends keyof ReturnType<ReduxStore["getState"]>,
-		P extends keyof ReturnType<ReduxStore["getState"]>[T],
+		P extends keyof ReturnType<ReduxStore["getState"]>[T]
 	> = {
 		slices: S[T]["slice"];
 	} & S[T]["slice"]["actions"] &
@@ -67,7 +67,7 @@ const flatInjectHookCreater = <
 			[K in keyof S[T]["thunks"]]: (
 				payload?: Parameters<S[T]["thunks"][K]> extends any[]
 					? Parameters<S[T]["thunks"][K]>[0]
-					: undefined,
+					: undefined
 			) => Promise<
 				UnPromisify<ReturnType<UnReturn<S[T]["thunks"][K]>>> & {
 					payload: UnPayload<S[T]["thunks"][K]>;
@@ -82,10 +82,10 @@ const flatInjectHookCreater = <
 		>,
 		Keys extends L2T<keyof ReturnType<ReduxStore["getState"]>[T]> = L2T<
 			keyof ReturnType<ReduxStore["getState"]>[T]
-		>,
+		>
 	>(
 		storeName: T,
-		keys?: Keys,
+		keys?: Keys
 	) => {
 		const storeState = useAppSelector<ReturnType<ReduxStore["getState"]>>()(
 			(state) => {
@@ -98,7 +98,7 @@ const flatInjectHookCreater = <
 				}
 				return state[storeName];
 			},
-			shallowEqual,
+			shallowEqual
 		);
 		const { thunks, slice } = stores[storeName];
 		let sliceTemp = slice;
