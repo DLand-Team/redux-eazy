@@ -18,11 +18,10 @@ function HomepageHeader() {
 					<div className={styles.infoPart}>
 						<p className={styles.title}>ReduxEazy</p>
 						<p className={styles.title2}>
-							A very usable, type-friendly version of Redux
+							一个简约好用、类型友好、规范完整的Redux整合方案
 						</p>
 						<p className={styles.title3}>
-							Powerful, clean code, efficient development, always
-							open source
+							All in one, 代码简洁, 开发高效，易于维护，永远开源
 						</p>
 						<div className={styles.btnPart}>
 							<Link className={styles.btn} to="/docs/intro">
@@ -30,7 +29,7 @@ function HomepageHeader() {
 							</Link>
 							<Link
 								className={`${styles.btn} ${styles.btn2}`}
-								to="https://github.com/DLand-Team/mui-eazy"
+								to="https://github.com/DLand-Team/redux-eazy"
 							>
 								View on GitHub
 							</Link>
@@ -40,14 +39,17 @@ function HomepageHeader() {
 						<div className={styles.image}>
 							<div className={styles.imageContainer}>
 								<div className={styles.imageBg}></div>
-								<img
-									className={styles.logoImg}
-									src={
-										require("@site/static/img/redux-eazy-logo.png")
-											.default
-									}
-								/>
 							</div>
+							<img
+								style={{
+									position: "absolute",
+								}}
+								className={styles.imgLogo}
+								src={
+									require("@site/static/img/redux-eazy-logo.png")
+										.default
+								}
+							/>
 						</div>
 					</div>
 				</div>

@@ -10,11 +10,11 @@ import { EnhancedStore } from "@reduxjs/toolkit";
 import useAppSelector from "./use-app-selector";
 import { shallowEqual } from "react-redux";
 // type TupleHead<T extends any[]> = T[number];
-export type L2T<L, LAlias = L, LAlias2 = L> = [L] extends [never]
-	? []
-	: L extends infer LItem
-	? [LItem?, ...L2T<Exclude<LAlias2, LItem>, LAlias>]
-	: never;
+// export type L2T<L, LAlias = L, LAlias2 = L> = [L] extends [never]
+// 	? []
+// 	: L extends infer LItem
+// 	? [L?, ...L2T<Exclude<LAlias2, LItem>, LAlias>]
+// 	: never;
 
 export type PromiseType<T> = Promise<T>;
 export type UnPromisify<T> = T extends PromiseType<infer U> ? U : never;
@@ -77,21 +77,17 @@ const flatInjectHookCreater = <
 
 	const useFlatInject = <
 		S extends keyof ReturnType<ReduxStore["getState"]>[T],
-		T extends keyof ReturnType<ReduxStore["getState"]> = keyof ReturnType<
-			ReduxStore["getState"]
-		>,
-		Keys extends L2T<keyof ReturnType<ReduxStore["getState"]>[T]> = L2T<
-			keyof ReturnType<ReduxStore["getState"]>[T]
-		>
+		T extends keyof ReturnType<ReduxStore["getState"]>,
+		Keys extends Partial<Record<S,".">>
 	>(
 		storeName: T,
 		keys?: Keys
 	) => {
 		const storeState = useAppSelector<ReturnType<ReduxStore["getState"]>>()(
 			(state) => {
-				if (keys) {
+				if (Object.keys(keys!)?.length) {
 					let result = {};
-					keys.forEach((key) => {
+					Object.keys(keys!).forEach((key) => {
 						result[key] = state[storeName][key];
 					});
 					return result;
@@ -142,7 +138,7 @@ const flatInjectHookCreater = <
 			...storeState,
 			...thunkArr,
 			...actionArr,
-		} as FlatStore<T, S>;
+		} as FlatStore<T, keyof Keys>;
 	};
 	return useFlatInject;
 };

@@ -11,41 +11,41 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
 	{
-		title: "Easy to Use",
+		title: "简约&类型",
 		Svg: require("@site/static/img/icon3.png").default,
 		description: (
 			<>
-				Mui Eazy is a simple and easy-to-use component library built on
-				top of MUI.
+				Redux Eazy 是一个简单易用、TypeScript 类型支持强大的 Redux
+				整合方案
 			</>
 		),
 	},
 	{
-		title: "Focus on Front-end Business Scenarios",
+		title: "聚焦&解耦",
 		Svg: require("@site/static/img/icon2.png").default,
 		description: (
 			<>
-				Developing practical components for common business scenarios to
-				provide robust support for development.
+				聚焦业务场景，打通开发任务流转环节，提高开发效率，降低业务耦合度，方便迭代重构
 			</>
 		),
 	},
 	{
-		title: "Powered by React",
+		title: "整合&优化",
 		Svg: require("@site/static/img/icon1.png").default,
 		description: (
-			<>
-				Comprehensive development documentation covering the component
-				library, hooks, utility function library, etc., providing a
-				complete, concise, and user-friendly resource.
-			</>
+			<>整合完整的Redux生态，简化环节，优化使用体验，扩展更多实用功能。</>
 		),
 	},
 ];
 
 function Feature({ title, Svg, description }: FeatureItem) {
 	return (
-		<div className={clsx("col col--4 ")}>
+		<div
+			className={clsx("col col--4 ")}
+			style={{
+				marginBottom: "12px",
+			}}
+		>
 			<div className={styles.card}>
 				<div className="text--center">
 					<img src={Svg} className={styles.featureSvg} role="img" />

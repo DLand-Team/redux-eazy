@@ -4,7 +4,7 @@ function App() {
 	const { title, setTitle, queryAct } = useFlatStore("appStore");
 	queryAct().then((a) => {
 		debugger;
-		a.payload
+		a.payload;
 	});
 	return (
 		<div>
