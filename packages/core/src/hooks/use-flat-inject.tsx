@@ -78,7 +78,7 @@ const flatInjectHookCreater = <
 	const useFlatInject = <
 		S extends keyof ReturnType<ReduxStore["getState"]>[T],
 		T extends keyof ReturnType<ReduxStore["getState"]>,
-		Keys extends Partial<Record<S, ".">>,
+		Keys extends Partial<Record<S, "in" | "off">>,
 	>(
 		storeName: T,
 		keys?: Keys,
