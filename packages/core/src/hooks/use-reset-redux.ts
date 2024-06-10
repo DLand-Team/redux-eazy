@@ -13,14 +13,19 @@ const resetReduxHookCreater = <
 ) => {
 	const useResetRedux = () => {
 		const dp = useDispatch();
-		const func = useMemo<() => void>(() => {
-			return () => {
-				Object.values<{
-					slice: Slice;
-				}>(stores).forEach((item) => {
-					const { reset } = item.slice.actions as any;
+		const func = useMemo<(storeName?: keyof S) => void>(() => {
+			return (storeName?: keyof S) => {
+				if (storeName) {
+					const { reset } = stores[storeName].slice.actions as any;
 					reset && dp(reset());
-				});
+				} else {
+					Object.values<{
+						slice: Slice;
+					}>(stores).forEach((item) => {
+						const { reset } = item.slice.actions as any;
+						reset && dp(reset());
+					});
+				}
 			};
 		}, []);
 		return func;

@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # useResetStore
 
-重制整个Redux的所有store。
+重制整个 Redux 的所有 store。
 
 ## 创建
 
@@ -20,8 +20,11 @@ export const useResetRedux = resetReduxHookCreater(stores);
 const reset = useResetRedux();
 
 ...
-// 找个位置打响指
+// 找个位置打响指，整个Redux的所有仓库都初始化（根据stateInit初始化）
 reset();
+
+// 如果想针对特定的仓库进行重置，直接传入Store名称即可
+reset('指定一个Store名称');
 ...
 ```
 

@@ -3,12 +3,13 @@ import {
 	AsyncThunk,
 	AsyncThunkAction,
 	ListenerMiddlewareInstance,
-	Slice,
 	ThunkDispatch,
 } from "@reduxjs/toolkit";
 import { EnhancedStore } from "@reduxjs/toolkit";
 import useAppSelector from "./use-app-selector";
 import { shallowEqual } from "react-redux";
+import { SlicePro } from "src/utils/createSliceCustom";
+
 // type TupleHead<T extends any[]> = T[number];
 // export type L2T<L, LAlias = L, LAlias2 = L> = [L] extends [never]
 // 	? []
@@ -49,7 +50,7 @@ const flatInjectHookCreater = <
 				>,
 			) => void;
 			thunks: { [k in keyof S[key]["thunks"]]: S[key]["thunks"][k] };
-			slice: Slice;
+			slice: SlicePro;
 		};
 	},
 	ReduxStore extends EnhancedStore,
@@ -62,8 +63,11 @@ const flatInjectHookCreater = <
 		P extends keyof ReturnType<ReduxStore["getState"]>[T],
 	> = {
 		slices: S[T]["slice"];
-	} & S[T]["slice"]["actions"] &
-		S[T]["slice"]["selectors"] & {
+	} & S[T]["slice"]["actions"] & {
+			[key in keyof S[T]["slice"]["computed"]]: (
+				params: Parameters<S[T]["slice"]["computed"][key]>[1],
+			) => ReturnType<S[T]["slice"]["computed"][key]>;
+		} & {
 			[K in keyof S[T]["thunks"]]: (
 				payload?: Parameters<S[T]["thunks"][K]> extends any[]
 					? Parameters<S[T]["thunks"][K]>[0]
@@ -78,7 +82,7 @@ const flatInjectHookCreater = <
 	const useFlatInject = <
 		S extends keyof ReturnType<ReduxStore["getState"]>[T],
 		T extends keyof ReturnType<ReduxStore["getState"]>,
-		Keys extends Partial<Record<S, "in" | "off">>,
+		Keys extends Partial<Record<S, "IN">>,
 	>(
 		storeName: T,
 		keys?: Keys,
@@ -100,6 +104,8 @@ const flatInjectHookCreater = <
 		let sliceTemp = slice;
 		let thunkArr = {};
 		let actionArr = {};
+		let computed = {};
+		// reducer
 		for (let key in sliceTemp.actions) {
 			let act = sliceTemp.actions[
 				key as keyof typeof sliceTemp.actions
@@ -111,6 +117,23 @@ const flatInjectHookCreater = <
 				},
 			};
 		}
+		// computed
+		if (sliceTemp.computed) {
+			for (let key in sliceTemp.computed || {}) {
+				computed[key] = (params) => {
+					return useAppSelector<ReturnType<ReduxStore["getState"]>>()(
+						(state) => {
+							return sliceTemp.computed![key](
+								state[storeName],
+								params,
+							);
+						},
+						shallowEqual,
+					);
+				};
+			}
+		}
+		// thunk
 		for (let key in thunks) {
 			let thk = thunks[key as keyof typeof thunks] as any;
 			thunkArr = {
@@ -134,10 +157,10 @@ const flatInjectHookCreater = <
 		}
 		return {
 			slices: sliceTemp,
-			...slice.selectors,
 			...storeState,
 			...thunkArr,
 			...actionArr,
+			...computed,
 		} as FlatStore<T, keyof Keys>;
 	};
 	return useFlatInject;

@@ -4,16 +4,16 @@ sidebar_position: 1
 
 # useSelector
 
-可以将一个store里的不同内容，扁平导出的hook。
+可以将一个 store 里的不同内容，扁平导出的 hook。
 
 _（该命名可由用户自行决定）_
 
 ## 创建
 
-该函数由`flatInjectHookCreater`工厂函数创建。
+该函数由`appSelectorHookCreater`工厂函数创建。
 
 ```ts
-export const useFlatStore = flatInjectHookCreater(stores, reduxStore);
+export const useAppSelecter = appSelectorHookCreater<ReduxState>;
 ```
 
 ## 用法
@@ -31,6 +31,6 @@ export const useFlatStore = flatInjectHookCreater(stores, reduxStore);
 
 如果不考虑性能，那么可以不用指定`stateKeys`，直接全量依赖，解构取得你想要的内容，状态库如果拆分的足够合理，完全可以。
 
-但是如果依赖外部状态库的部分内容，比如公用类型的`appStore`或者其他业务状态库，那么非常建议指定依赖的内容，这样可以很好的控制刷新粒度，good写法～
+但是如果依赖外部状态库的部分内容，比如公用类型的`appStore`或者其他业务状态库，那么非常建议指定依赖的内容，这样可以很好的控制刷新粒度，good 写法～
 
 :::
