@@ -4,11 +4,11 @@ sidebar_position: 1
 
 # dp
 
-命名**dp**，是`dispatch`的简写，意为**派发，触发**之意。
+命名**dp**（推荐，可自行命名），是`dispatch`的简写，意为**派发，触发**之意。
 
 ## 创建
 
-该函数是由一个**能触发store状态更新**的`dispatch`的工厂函数创建。
+该函数是由一个**能触发 store 状态更新**的`dispatch`的工厂函数创建。
 
 ```ts
 export const dp = getDp(reduxStore, stores);
@@ -32,8 +32,8 @@ dp("appStore", "queryAct", {
 
 ## 返回
 
--   `Promise<{ payload }>` payload的返回值取决于thunk返回的值，不返回就是空，**并且支持类型提示**
+-   `Promise<{ payload }>` payload 的返回值取决于 thunk 返回的值，不返回就是空，**并且支持类型提示**
 
 :::tip
-该函数提供了强大的类型支持，当传入仓库名字，后续的参数都会随着前面的参数进行推导，类似级联select的体验。
+该函数提供了强大的类型支持，当传入仓库名字，后续的参数都会随着前面的参数进行推导，类似级联 select 的体验。
 :::

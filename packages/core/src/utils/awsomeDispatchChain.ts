@@ -16,7 +16,7 @@ export type UnParams<T> =
 			? Z
 			: T extends (...args: any) => any
 				? Parameters<T>[0]
-				: any;
+				: undefined;
 
 export const getDpChain = <
 	T extends EnhancedStore,
@@ -41,29 +41,63 @@ export const getDpChain = <
 		storeName: T,
 	): {
 		[key2 in keyof ((typeof stores)[T]["thunks"] &
-			(typeof stores)[T]["slice"]["actions"])]: (
-			payload: key2 extends "setState"
-				? S[T]["slice"] extends Slice<infer U, any, any>
-					? Partial<U>
-					: any
-				: UnParams<
-						key2 extends keyof (typeof stores)[T]["slice"]["actions"]
-							? (typeof stores)[T]["slice"]["actions"][key2]
-							: key2 extends keyof (typeof stores)[T]["thunks"]
-								? (typeof stores)[T]["thunks"][key2]
+			(typeof stores)[T]["slice"]["actions"])]: key2 extends keyof (typeof stores)[T]["thunks"]
+			? NonNullable<UnParams<(typeof stores)[T]["thunks"][key2]>> extends
+					| undefined
+					| null
+				? () => key2 extends keyof (typeof stores)[T]["thunks"]
+						? Promise<
+								{
+									payload: (typeof stores)[T]["thunks"][key2] extends (
+										arg: any,
+									) => AsyncThunkAction<infer U, any, any>
+										? U
+										: any;
+								} & { error?: any }
+							>
+						: void
+				: (
+						payload: key2 extends "setState"
+							? S[T]["slice"] extends Slice<infer U, any, any>
+								? Partial<U>
 								: any
-					>,
-		) => key2 extends keyof (typeof stores)[T]["thunks"]
-			? Promise<
-					{
-						payload: (typeof stores)[T]["thunks"][key2] extends (
-							arg: any,
-						) => AsyncThunkAction<infer U, any, any>
-							? U
-							: any;
-					} & { error?: any }
-				>
-			: void;
+							: UnParams<
+									key2 extends keyof (typeof stores)[T]["slice"]["actions"]
+										? (typeof stores)[T]["slice"]["actions"][key2]
+										: any
+								>,
+					) => key2 extends keyof (typeof stores)[T]["thunks"]
+						? Promise<
+								{
+									payload: (typeof stores)[T]["thunks"][key2] extends (
+										arg: any,
+									) => AsyncThunkAction<infer U, any, any>
+										? U
+										: any;
+								} & { error?: any }
+							>
+						: void
+			: (
+					payload: key2 extends "setState"
+						? S[T]["slice"] extends Slice<infer U, any, any>
+							? Partial<U>
+							: any
+						: UnParams<
+								key2 extends keyof (typeof stores)[T]["slice"]["actions"]
+									? (typeof stores)[T]["slice"]["actions"][key2]
+									: any
+							>,
+				) => key2 extends keyof (typeof stores)[T]["thunks"]
+					? Promise<
+							{
+								payload: (typeof stores)[T]["thunks"][key2] extends (
+									arg: any,
+								) => AsyncThunkAction<infer U, any, any>
+									? U
+									: any;
+							} & { error?: any }
+						>
+					: void;
 	} => {
 		const actMap = {
 			...stores[storeName]["thunks"],

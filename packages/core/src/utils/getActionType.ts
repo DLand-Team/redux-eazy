@@ -16,14 +16,14 @@ export const getActionTypeCreater = <
 					unknown,
 					ThunkDispatch<unknown, unknown, AnyAction>,
 					unknown
-				>,
+				>
 			) => void;
 			thunks: { [k in keyof S[key]["thunks"]]: S[key]["thunks"][k] };
 			slice: Slice;
 		};
-	},
+	}
 >(
-	stores: S,
+	stores: S
 ) => {
 	type Slices = S;
 	type Pick<T, K extends keyof T> = {
@@ -51,7 +51,7 @@ export const getActionTypeCreater = <
 		};
 	};
 	function getActionType<SliceName extends keyof Slices>(
-		sliceName: SliceName,
+		sliceName: SliceName
 	): Pick<typeof b, SliceName>[SliceName] {
 		let tempB: Partial<{
 			[key in keyof Slices]: Partial<
@@ -72,7 +72,7 @@ export const getActionTypeCreater = <
 					unknown,
 					ThunkDispatch<unknown, unknown, AnyAction>,
 					unknown
-				>,
+				>
 			) => void;
 			thunks: { [k: string]: AsyncThunk<any, any, any> };
 			slice: Slice;
