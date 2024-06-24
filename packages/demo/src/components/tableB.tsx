@@ -9,7 +9,7 @@ import {
 	Typography,
 	Button,
 } from "antd";
-import { useFlat } from "../service";
+import { useFlatStore } from "../service";
 
 interface Item {
 	key: string;
@@ -75,7 +75,7 @@ const App: React.FC = () => {
 	const [form] = Form.useForm();
 	const [data, setData] = useState(originData);
 	const [editingKey, setEditingKey] = useState("");
-	const { setA } = useFlat("appStore");
+	const { setA } = useFlatStore("appStore");
 	const isEditing = (record: Item) => record.key === editingKey;
 	console.log("456");
 	const edit = (record: Partial<Item> & { key: React.Key }) => {

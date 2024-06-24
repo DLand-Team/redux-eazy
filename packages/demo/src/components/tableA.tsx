@@ -1,15 +1,14 @@
-import { memo, useState } from "react";
 import type { TableProps } from "antd";
 import {
+	Button,
 	Form,
 	Input,
 	InputNumber,
 	Popconfirm,
 	Table,
 	Typography,
-	Button,
 } from "antd";
-import { dp, reduxStore, useFlat } from "../service";
+import { memo, useState } from "react";
 
 interface Item {
 	key: string;
@@ -48,12 +47,8 @@ const EditableCell: React.FC<EditableCellProps> = ({
 	...restProps
 }) => {
 	const inputNode = inputType === "number" ? <InputNumber /> : <Input />;
-	const a = useFlat("appStore", ["a", "b"]);
-	a.ddd
-	a.ccc
 	return (
 		<td {...restProps}>
-			{pageNum}
 			{editing ? (
 				<Form.Item
 					name={dataIndex}
@@ -195,13 +190,7 @@ const App: React.FC = () => {
 					onChange: cancel,
 				}}
 			/>
-			<Button
-				onClick={() => {
-					dp("appStore", "setA", Date.now().toString());
-				}}
-			>
-				test{reduxStore.getState().appStore.a}
-			</Button>
+			<Button onClick={() => {}}></Button>
 		</Form>
 	);
 };

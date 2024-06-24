@@ -1,4 +1,3 @@
-import { useFlat } from "../service";
 
 const A = () => {
 	return (
