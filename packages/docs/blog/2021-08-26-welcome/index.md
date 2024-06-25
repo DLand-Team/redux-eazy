@@ -1,25 +1,20 @@
 ---
-slug: welcome
-title: Welcome
-authors: [slorber, yangshun]
-tags: [facebook, hello, docusaurus]
+slug: 进军路线
+title: 进军路线
 ---
 
-[Docusaurus blogging features](https://docusaurus.io/docs/blog) are powered by the [blog plugin](https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-content-blog).
+## 0.1.9
 
-Simply add Markdown files (or folders) to the `blog` directory.
+加入了**分支**的概念，你能想象么？
 
-Regular blog authors can be added to `authors.yml`.
+一个仓库可以被分支管理，切换出不同的分支互不影响，彼此独立，但是公用一套代码。
 
-The blog post date can be extracted from filenames, such as:
+## 0.1.8
 
-- `2019-05-30-welcome.md`
-- `2019-05-30-welcome/index.md`
+加入了 dpChain 这个 api，链式触发 action。
 
-A blog post folder can be convenient to co-locate blog post images:
+好处就是大大的提升了跳转体验，可以直接跳转对应导出的代码位置，快速定位，相比 dp 好用了 一大截
 
-![Docusaurus Plushie](./docusaurus-plushie-banner.jpeg)
+## 0.1 版本前后
 
-The blog supports tags as well!
-
-**And if you don't want a blog**: just delete this directory, and use `blog: false` in your Docusaurus config.
+主要区别就是，Redux 的生态更新的缘故，基本功能和 api 设计并没有发生太大变化，主要是扩展了功能

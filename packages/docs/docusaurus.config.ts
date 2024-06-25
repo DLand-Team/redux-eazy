@@ -51,15 +51,13 @@ const config: Config = {
 					sidebarPath: "./sidebars.ts",
 					// Please change this to your repo.
 					// Remove this to remove the "edit this page" links.
-					editUrl:
-						"https://dland-team.github.io/redux-eazy",
+					editUrl: "https://dland-team.github.io/redux-eazy",
 				},
 				blog: {
 					showReadingTime: true,
 					// Please change this to your repo.
 					// Remove this to remove the "edit this page" links.
-					editUrl:
-						"https://dland-team.github.io/redux-eazy",
+					editUrl: "https://dland-team.github.io/redux-eazy",
 				},
 				theme: {
 					customCss: "./src/css/custom.css",
@@ -113,9 +111,9 @@ const config: Config = {
 					type: "docSidebar",
 					sidebarId: "tutorialSidebar",
 					position: "left",
-					label: "Tutorial",
+					label: "教程",
 				},
-				{ to: "/blog", label: "Blog", position: "left" },
+				{ to: "/blog", label: "记录", position: "left" },
 				{
 					href: "https://github.com/DLand-Team/redux-eazy",
 					label: "GitHub",
@@ -139,7 +137,7 @@ const config: Config = {
 					title: "More",
 					items: [
 						{
-							label: "Blog",
+							label: "123",
 							to: "/blog",
 						},
 						{
