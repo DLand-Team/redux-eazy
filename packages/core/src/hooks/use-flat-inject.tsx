@@ -1,14 +1,8 @@
-import {
-	Action,
-	AsyncThunk,
-	AsyncThunkAction,
-	ListenerMiddlewareInstance,
-	ThunkDispatch,
-} from "@reduxjs/toolkit";
-import { EnhancedStore } from "@reduxjs/toolkit";
-import useAppSelector from "./use-app-selector";
+import { AsyncThunk, AsyncThunkAction, EnhancedStore } from "@reduxjs/toolkit";
 import { shallowEqual } from "react-redux";
 import { SlicePro } from "src/utils/createSliceCustom";
+import { WatchType } from "src/utils/createStore";
+import useAppSelector from "./use-app-selector";
 
 // type TupleHead<T extends any[]> = T[number];
 // export type L2T<L, LAlias = L, LAlias2 = L> = [L] extends [never]
@@ -20,17 +14,17 @@ import { SlicePro } from "src/utils/createSliceCustom";
 export type PromiseType<T> = Promise<T>;
 export type UnPromisify<T> = T extends PromiseType<infer U> ? U : never;
 export type UnPayload<T> = T extends (
-	arg: any,
+	arg: any
 ) => AsyncThunkAction<infer U, any, any>
 	? U
 	: never;
 export type UnPayload2<T> = T extends (
-	arg: any,
+	arg: any
 ) => AsyncThunk<infer U, any, any>
 	? U
 	: never;
 export type UnReturn<T> = T extends (
-	arg: any,
+	arg: any
 ) => AsyncThunkAction<any, any, any>
 	? ReturnType<T>
 	: never;
@@ -42,36 +36,30 @@ export type UnReturn2<T> = T extends (arg: any) => AsyncThunk<any, any, any>
 const flatInjectHookCreater = <
 	S extends {
 		[key in keyof ReturnType<ReduxStore["getState"]>]: {
-			watch: (
-				listenerMiddleware: ListenerMiddlewareInstance<
-					unknown,
-					ThunkDispatch<unknown, unknown, Action>,
-					unknown
-				>,
-			) => void;
+			watch: WatchType;
 			thunks: { [k in keyof S[key]["thunks"]]: S[key]["thunks"][k] };
 			slice: SlicePro;
 		};
 	},
-	ReduxStore extends EnhancedStore,
+	ReduxStore extends EnhancedStore
 >(
 	stores: S,
-	reduxStore: ReduxStore,
+	reduxStore: ReduxStore
 ) => {
 	type FlatStore<
 		T extends keyof ReturnType<ReduxStore["getState"]>,
-		P extends keyof ReturnType<ReduxStore["getState"]>[T],
+		P extends keyof ReturnType<ReduxStore["getState"]>[T]
 	> = {
 		slices: S[T]["slice"];
 	} & S[T]["slice"]["actions"] & {
 			[key in keyof S[T]["slice"]["computed"]]: (
-				params: Parameters<S[T]["slice"]["computed"][key]>[1],
+				params: Parameters<S[T]["slice"]["computed"][key]>[1]
 			) => ReturnType<S[T]["slice"]["computed"][key]>;
 		} & {
 			[K in keyof S[T]["thunks"]]: (
 				payload?: Parameters<S[T]["thunks"][K]> extends any[]
 					? Parameters<S[T]["thunks"][K]>[0]
-					: undefined,
+					: undefined
 			) => Promise<
 				UnPromisify<ReturnType<UnReturn<S[T]["thunks"][K]>>> & {
 					payload: UnPayload<S[T]["thunks"][K]>;
@@ -82,26 +70,35 @@ const flatInjectHookCreater = <
 	const useFlatInject = <
 		S extends keyof ReturnType<ReduxStore["getState"]>[T],
 		T extends keyof ReturnType<ReduxStore["getState"]>,
-		Keys extends Partial<Record<S, "IN">>,
+		Keys extends Partial<Record<S, "IN">>
 	>(
-		storeName: T,
-		keys?: Keys,
+		storeNameBase: T | [T, string],
+		keys?: Keys
 	) => {
+		const [storeName, branchName] = Array.isArray(storeNameBase)
+			? [`${storeNameBase[0] as string}`, storeNameBase[1]]
+			: [storeNameBase as string, undefined];
+		const sliceName = `${storeName}${branchName ? "." + branchName : ""}`;
 		const storeState = useAppSelector<ReturnType<ReduxStore["getState"]>>()(
 			(state) => {
 				if (keys && Object.keys(keys!)?.length) {
 					let result = {};
 					Object.keys(keys!).forEach((key) => {
-						result[key] = state[storeName][key];
+						result[key] = state[sliceName][key];
 					});
 					return result;
 				}
-				return state[storeName];
+				return state[sliceName];
 			},
-			shallowEqual,
+			shallowEqual
 		);
-		const { thunks, slice } = stores[storeName];
-		let sliceTemp = slice;
+		const { thunks } = stores[storeName];
+		const sliceTemp = Array.isArray(stores[storeName]["slice"])
+			? //@ts-ignore
+			  stores[storeName]["slice"].find((item) => {
+					return item.branchName == branchName;
+			  })
+			: stores[storeName]["slice"];
 		let thunkArr = {};
 		let actionArr = {};
 		let computed = {};
@@ -124,37 +121,79 @@ const flatInjectHookCreater = <
 					return useAppSelector<ReturnType<ReduxStore["getState"]>>()(
 						(state) => {
 							return sliceTemp.computed![key](
-								state[storeName],
-								params,
+								state[sliceName],
+								params
 							);
 						},
-						shallowEqual,
+						shallowEqual
 					);
 				};
 			}
 		}
 		// thunk
-		for (let key in thunks) {
-			let thk = thunks[key as keyof typeof thunks] as any;
-			thunkArr = {
-				...thunkArr,
-				[key]: (payload: never) => {
-					return reduxStore
-						.dispatch(thk(payload))
-						.then((res: any) => {
-							if (res.error) {
-								let error = new Error(res.error.message);
-								error.stack = res.error.stack;
-								error.name = res.error.name;
-								error.message = res.error.message;
-								throw error;
-							} else {
-								return res;
+		if (Array.isArray(thunks)) {
+			const thunksItem = thunks.find((item) => {
+				if (!item.branchName && !branchName) {
+					return true;
+				}
+				return item.branchName == branchName;
+			});
+			if (thunksItem) {
+				for (let key in thunksItem) {
+					let thk = thunksItem[key as keyof typeof thunks] as any;
+					thunkArr = {
+						...thunkArr,
+						[key]: (payload: never) => {
+							if (
+								typeof payload == "object" &&
+								"payload" in payload
+							) {
+								//@ts-ignore
+								payload.branchName = branchName;
 							}
-						});
-				},
-			};
+							return reduxStore
+								.dispatch(thk(payload))
+								.then((res: any) => {
+									if (res.error) {
+										let error = new Error(
+											res.error.message
+										);
+										error.stack = res.error.stack;
+										error.name = res.error.name;
+										error.message = res.error.message;
+										throw error;
+									} else {
+										return res;
+									}
+								});
+						},
+					};
+				}
+			}
+		} else {
+			for (let key in thunks) {
+				let thk = thunks[key as keyof typeof thunks] as any;
+				thunkArr = {
+					...thunkArr,
+					[key]: (payload: never) => {
+						return reduxStore
+							.dispatch(thk(payload))
+							.then((res: any) => {
+								if (res.error) {
+									let error = new Error(res.error.message);
+									error.stack = res.error.stack;
+									error.name = res.error.name;
+									error.message = res.error.message;
+									throw error;
+								} else {
+									return res;
+								}
+							});
+					},
+				};
+			}
 		}
+
 		return {
 			slices: sliceTemp,
 			...storeState,

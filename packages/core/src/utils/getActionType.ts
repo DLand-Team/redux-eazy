@@ -1,23 +1,11 @@
-import {
-	AnyAction,
-	AsyncThunk,
-	ListenerMiddlewareInstance,
-	Slice,
-	ThunkDispatch,
-} from "@reduxjs/toolkit";
-import { EnhancedStore } from "@reduxjs/toolkit";
+import { AsyncThunk, EnhancedStore, Slice } from "@reduxjs/toolkit";
+import { WatchType } from "./createStore";
 
 export const getActionTypeCreater = <
 	ReduxStore extends EnhancedStore,
 	S extends {
 		[key in keyof ReturnType<ReduxStore["getState"]>]: {
-			watch: (
-				listenerMiddleware: ListenerMiddlewareInstance<
-					unknown,
-					ThunkDispatch<unknown, unknown, AnyAction>,
-					unknown
-				>
-			) => void;
+			watch: WatchType;
 			thunks: { [k in keyof S[key]["thunks"]]: S[key]["thunks"][k] };
 			slice: Slice;
 		};
@@ -51,8 +39,11 @@ export const getActionTypeCreater = <
 		};
 	};
 	function getActionType<SliceName extends keyof Slices>(
-		sliceName: SliceName
+		sliceNameBase: SliceName | [SliceName, string]
 	): Pick<typeof b, SliceName>[SliceName] {
+		const [sliceName, subName] = Array.isArray(sliceNameBase)
+			? sliceNameBase
+			: [sliceNameBase];
 		let tempB: Partial<{
 			[key in keyof Slices]: Partial<
 				{
@@ -67,24 +58,22 @@ export const getActionTypeCreater = <
 			>;
 		}> = b;
 		Object.entries<{
-			watch: (
-				listenerMiddleware: ListenerMiddlewareInstance<
-					unknown,
-					ThunkDispatch<unknown, unknown, AnyAction>,
-					unknown
-				>
-			) => void;
+			watch: WatchType;
 			thunks: { [k: string]: AsyncThunk<any, any, any> };
 			slice: Slice;
-		}>(stores).forEach(([key, value]) => {
-			Object.keys({ ...value.slice.actions }).forEach((keyItem) => {
+		}>(stores).forEach(([keyBase, value]) => {
+			const key = subName ? `${keyBase}.${subName}` : keyBase;
+			const slice = Array.isArray(value.slice)
+				? value.slice[0]
+				: value.slice;
+
+			Object.keys({ ...slice.actions }).forEach((keyItem) => {
 				if (!b[key as keyof Slices]) {
 					//@ts-ignore
 					tempB[key as keyof Slices] = {
 						[keyItem]: `${key}/${keyItem}`,
 					};
 				} else {
-					// 这种可以
 					tempB[key as keyof Slices] = {
 						...b[key as keyof Slices],
 						[keyItem]: `${key}/${keyItem}`,
@@ -117,7 +106,11 @@ export const getActionTypeCreater = <
 		return (
 			//@ts-ignore
 			{
-				[sliceName]: (tempB as typeof b)[sliceName],
+				[sliceName]: (tempB as typeof b)[
+					subName
+						? `${sliceName as string}.${subName as string}`
+						: (sliceName as string)
+				],
 			}[sliceName] || ""
 		);
 	}

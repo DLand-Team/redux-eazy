@@ -1,16 +1,16 @@
-import { createMatcher } from "redux-eazy";
-import { dp, getActionType } from "../..";
+import { getActionType } from "../..";
 import { startAppListening } from "../../setup";
 
-const watch = () => {
+const watch = (branchName: string) => {
+	let a = getActionType(["appStore", branchName]).setTitle;
+	debugger;
 	startAppListening({
-		type: getActionType("appStore").setPagination,
+		type: a,
 		effect: async () => {
-			dp("appStore", "queryAct");
+			console.log(123);
 		},
 	});
 	// startAppListening({
-	// 	matcher: createMatcher((action) => {
 	// 		return action.type == `${getActionType("appStore").setPagination}`;
 	// 	}),
 	// 	effect: async () => {

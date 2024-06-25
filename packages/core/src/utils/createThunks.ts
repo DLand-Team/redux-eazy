@@ -8,7 +8,7 @@ import { getCreateThunkWithName } from "./index";
 
 const getCreateThunks = <
 	ReduxState = any,
-	ReduxDispatch extends Dispatch<Action> = Dispatch<Action>,
+	ReduxDispatch extends Dispatch<Action> = Dispatch<Action>
 >() => {
 	const createThunks = <
 		S extends {
@@ -37,17 +37,15 @@ const getCreateThunks = <
 						: any
 				>
 			>[1];
-		},
+		}
 	>(
-		name: string,
-		obj: S,
+		name: keyof ReduxState | [keyof ReduxState, string[] | undefined],
+		obj: S
 	) => {
 		const createThunkWithName = getCreateThunkWithName<
 			ReduxState,
 			ReduxDispatch
 		>;
-		const cteateThunk = createThunkWithName(name);
-		//
 		let thunks = {} as {
 			[key in keyof S]: AsyncThunk<
 				S[key] extends AsyncThunkPayloadCreator<infer U, any, any>
@@ -60,11 +58,45 @@ const getCreateThunks = <
 					? UUU
 					: any
 			>;
+		} & {
+			branchName: string;
 		};
-		for (let key in obj) {
-			// @ts-ignore
-			thunks[key] = cteateThunk(key, obj[key]);
+		const cteateThunk = createThunkWithName(name as string);
+		if (Array.isArray(name)) {
+			if (name[1]?.length) {
+				name[1].unshift("");
+				//@ts-ignore
+				thunks = name[1].map((item) => {
+					const thunksTemp = {};
+					const branchName = item;
+					for (let key in obj) {
+						const cteateThunk = createThunkWithName(
+							`${name[0] as string}${
+								branchName ? "." + branchName : ""
+							}` as string
+						);
+						// @ts-ignore
+						thunksTemp[key] = cteateThunk(key, obj[key]);
+					}
+					//@ts-ignore
+					thunksTemp.branchName = branchName;
+					return thunksTemp;
+				});
+			} else {
+				for (let key in obj) {
+					const cteateThunk = createThunkWithName(name[0] as string);
+					// @ts-ignore
+					thunks[key] = cteateThunk(key, obj[key]);
+				}
+			}
+		} else {
+			for (let key in obj) {
+				const cteateThunk = createThunkWithName(name as string);
+				// @ts-ignore
+				thunks[key] = cteateThunk(key, obj[key]);
+			}
 		}
+
 		return thunks;
 	};
 	return createThunks;

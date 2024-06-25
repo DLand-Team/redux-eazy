@@ -15,15 +15,23 @@ type StoreSlices<T> = {
 			: never
 		: never;
 };
+export type WatchType = (
+	branchName: string,
+	listenerMiddleware: ListenerMiddlewareInstance<
+		unknown,
+		ThunkDispatch<unknown, unknown, Action>,
+		unknown
+	>
+) => void;
 type Middlewares<S> = ReadonlyArray<Middleware<{}, S>>;
 const createStore = <
 	ST extends {
 		[key in keyof ST]: ST[key];
 	},
-	M extends Middlewares<ST> = ReadonlyArray<Middleware<{}, ST>>,
+	M extends Middlewares<ST> = ReadonlyArray<Middleware<{}, ST>>
 >(
 	stores: ST,
-	middlewareList?: M,
+	middlewareList?: M
 ) => {
 	const fn = <T>(
 		key: keyof T,
@@ -34,9 +42,19 @@ const createStore = <
 					reducer: T[k];
 				};
 			};
-		},
+		}
 	) => {
-		reducer[key] = stores[key].slice.reducer;
+		if (Array.isArray(stores[key].slice)) {
+			(stores[key].slice as any).forEach((element) => {
+				reducer[
+					element.branchName
+						? `${key as string}.${element.branchName}`
+						: (key as string)
+				] = element.reducer;
+			});
+		} else {
+			reducer[key] = stores[key].slice.reducer;
+		}
 	};
 	const reducer: StoreSlices<ST> = {} as StoreSlices<ST>;
 
@@ -57,24 +75,26 @@ const createStore = <
 	listenerMiddleware.clearListeners();
 	// 注册监听
 	Object.values<{
-		watch: (
-			listenerMiddleware: ListenerMiddlewareInstance<
-				unknown,
-				ThunkDispatch<unknown, unknown, Action>,
-				unknown
-			>,
-		) => void;
+		slice: {
+			reducer: any;
+		};
+		watch: WatchType;
 	}>(stores).forEach((s) => {
-		return s?.watch(listenerMiddleware);
+		if (Array.isArray(s.slice)) {
+			s.slice.forEach((item) => {
+				s?.watch(item?.branchName, listenerMiddleware);
+			});
+		} else {
+			s?.watch("", listenerMiddleware);
+		}
 	});
-	type P2 =
-		typeof reduxStore extends EnhancedStore<any, infer UU, any>
-			? UU
-			: never;
-	type P3 =
-		typeof reduxStore extends EnhancedStore<any, any, infer UUU>
-			? UUU
-			: never;
+
+	type P2 = typeof reduxStore extends EnhancedStore<any, infer UU, any>
+		? UU
+		: never;
+	type P3 = typeof reduxStore extends EnhancedStore<any, any, infer UUU>
+		? UUU
+		: never;
 
 	return reduxStore as EnhancedStore<
 		{

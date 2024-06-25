@@ -3,6 +3,7 @@ import {
 	flatInjectHookCreater,
 	getActionTypeCreater,
 	getDp,
+	getDpChain,
 	resetReduxHookCreater,
 } from "redux-eazy";
 import { stores } from "./stores";
@@ -18,9 +19,7 @@ window.reduxStore = reduxStore;
 // 后置
 /* Hooks */
 export const useResetRedux = resetReduxHookCreater(stores);
-// type Ov = Parameters<
-// 	ReturnType<typeof flatInjectHookCreater<typeof stores, typeof reduxStore>>
-// >;
 export const useFlatStore = flatInjectHookCreater(stores, reduxStore);
 /* utils */
 export const dp = getDp(reduxStore, stores);
+export const dpChain = getDpChain(reduxStore, stores);

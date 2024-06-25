@@ -17,6 +17,7 @@ const initialState = (): SliceState => {
 const slice = createSliceE({
 	name: names.appStore,
 	stateInit: initialState,
+	branch: ["a", "b"],
 	reducers: {
 		setTitle(state, { payload }: PayloadAction<Partial<string>>) {
 			state.title = payload;
@@ -34,6 +35,11 @@ const slice = createSliceE({
 				...state.pagination,
 				total,
 			};
+		},
+	},
+	computed: {
+		test(state, test) {
+			return state.title + "~" + test;
 		},
 	},
 });

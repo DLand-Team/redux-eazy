@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { TableProps } from "antd";
+import { Select } from "antd";
 import {
 	Form,
 	Input,
@@ -75,7 +76,6 @@ const App: React.FC = () => {
 	const [form] = Form.useForm();
 	const [data, setData] = useState(originData);
 	const [editingKey, setEditingKey] = useState("");
-	const { setA } = useFlatStore("appStore");
 	const isEditing = (record: Item) => record.key === editingKey;
 	console.log("456");
 	const edit = (record: Partial<Item> & { key: React.Key }) => {
@@ -191,13 +191,7 @@ const App: React.FC = () => {
 					onChange: cancel,
 				}}
 			/>
-			<Button
-				onClick={() => {
-					setA(Date.now().toString());
-				}}
-			>
-				test
-			</Button>
+			<Button onClick={() => {}}>test</Button>
 		</Form>
 	);
 };

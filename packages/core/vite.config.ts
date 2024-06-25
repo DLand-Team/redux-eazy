@@ -5,8 +5,8 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
 	build: {
-		minify: process.env.DEBUG ? false : true,
-		sourcemap: "hidden",
+		minify: process.env.DEBUG ? false : false,
+		sourcemap: "inline",
 		lib: {
 			entry: "src/index.ts", // 设置入口文件
 			name: "redux-eazy", // 起个名字

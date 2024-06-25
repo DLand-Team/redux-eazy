@@ -1,14 +1,15 @@
 import { dp } from "../..";
 import { createThunks } from "../../setup";
-import names from "../names";
-import httpApi from "./api";
-import { QueryApiParams } from "./model";
-
-const thunks = createThunks(names.appStore, {
-	queryAct: async (arg: QueryApiParams, api) => {
-		const { data } = await httpApi.queryApi({ ...arg });
-		dp("appStore", "setDataList", data);
-		return data;
+import slice from "./slice";
+const thunks = createThunks(["appStore", slice.branch], {
+	setTitleAct: async ({
+		payload,
+		branchName,
+	}: {
+		payload: string;
+		branchName?: string;
+	}) => {
+		dp(["appStore", branchName!], "setTitle", payload);
 	},
 });
 export default thunks;

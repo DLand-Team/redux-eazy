@@ -113,8 +113,8 @@ importers:
         specifier: 5.0.1
         version: 5.0.1(@babel/plugin-syntax-flow@7.24.1)(@babel/plugin-transform-react-jsx@7.23.4)(eslint@8.57.0)(react@18.2.0)(typescript@5.4.5)
       redux-eazy:
-        specifier: 0.1.2
-        version: 0.1.2(@types/react@18.2.66)
+        specifier: workspace:^
+        version: link:../core
       typescript:
         specifier: ^5.4.5
         version: 5.4.5
@@ -161,9 +161,6 @@ importers:
       '@docusaurus/types':
         specifier: 3.4.0
         version: 3.4.0(react-dom@18.2.0)(react@18.2.0)
-      config-webpack:
-        specifier: file:plugins/config-webpack
-        version: file:packages/docs/plugins/config-webpack
       typescript:
         specifier: ~5.2.2
         version: 5.2.2
@@ -17363,19 +17360,6 @@ packages:
       indent-string: 4.0.0
       strip-indent: 3.0.0
 
-  /redux-eazy@0.1.2(@types/react@18.2.66):
-    resolution: {integrity: sha512-1sQ4JAh+T+b1Kq+CPff/v06TzMKaitZE8fCUyRZ2bSnRlMR+I8uu7FSGPfdBWtuqV1Wwtb2w21IM5doymEdv9A==}
-    dependencies:
-      '@reduxjs/toolkit': 2.2.3(react-redux@9.1.2)(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      react-redux: 9.1.2(@types/react@18.2.66)(react@18.2.0)(redux@5.0.1)
-      redux: 5.0.1
-      redux-logger: 3.0.6
-    transitivePeerDependencies:
-      - '@types/react'
-    dev: false
-
   /redux-logger@3.0.6:
     resolution: {integrity: sha512-JoCIok7bg/XpqA1JqCqXFypuqBbQzGQySrhFzewB7ThcnysTO30l4VCst86AuB9T9tuT03MAA56Jw2PNhRSNCg==}
     dependencies:
@@ -20713,8 +20697,3 @@ packages:
 
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
-
-  file:packages/docs/plugins/config-webpack:
-    resolution: {directory: packages/docs/plugins/config-webpack, type: directory}
-    name: config-webpack
-    dev: true
