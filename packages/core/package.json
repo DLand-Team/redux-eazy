@@ -2,7 +2,7 @@
 	"name": "redux-eazy",
 	"main": "dist/redux-eazy.es.js",
 	"types": "dist/types/index.d.ts",
-	"version": "0.1.9-beta.1",
+	"version": "0.1.9-beta.2",
 	"description": "Vite & TypeScript",
 	"author": "闲D阿强",
 	"files": [
@@ -36,13 +36,13 @@
 	},
 	"dependencies": {
 		"@reduxjs/toolkit": "2.2.3",
-		"react": "^18.2.0",
-		"react-dom": "^18.2.0",
 		"react-redux": "^9.1.2",
 		"redux": "^5.0.1",
 		"redux-logger": "^3.0.6"
 	},
 	"devDependencies": {
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
 		"@types/node": "^20.11.16",
 		"@types/react": "^18.2.28",
 		"@types/react-dom": "^18.2.13",

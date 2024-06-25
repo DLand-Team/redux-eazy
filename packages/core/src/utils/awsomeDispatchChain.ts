@@ -96,13 +96,15 @@ export const getDpChain = <
 
 		let actMap;
 		if (Array.isArray(stores[storeName].slice)) {
-			//@ts-ignore
-			const thunksTemp = stores[storeName]["thunks"].find((item) => {
-				if (!item.branchName && !branchName) {
-					return true;
-				}
-				return item.branchName == branchName;
-			});
+			const thunksTemp = Array.isArray(stores[storeName]["thunks"])
+				? //@ts-ignore
+				  stores[storeName]["thunks"].find((item) => {
+						if (!item.branchName && !branchName) {
+							return true;
+						}
+						return item.branchName == branchName;
+				  })
+				: stores[storeName]["thunks"];
 			//@ts-ignore
 			const actionsTemp = stores[storeName]["slice"].find((item) => {
 				return item.branchName == branchName;
