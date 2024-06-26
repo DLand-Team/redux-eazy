@@ -107,6 +107,9 @@ export const getDpChain = <
 				: stores[storeName]["thunks"];
 			//@ts-ignore
 			const actionsTemp = stores[storeName]["slice"].find((item) => {
+				if (!item.branchName && !branchName) {
+					return true;
+				}
 				return item.branchName == branchName;
 			})["actions"];
 			//@ts-ignore
