@@ -1,5 +1,6 @@
 const names = {
-  appStore: 'appStore',
+	appStore: "appStore",
+	otherStore: "otherStore",
 };
 
 export default names;
