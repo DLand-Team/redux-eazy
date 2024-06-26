@@ -9,6 +9,9 @@ function App() {
 	} = useFlatStore(["appStore", "a"], {
 		title: "IN",
 	});
+	setTitleActA("1").then((a) => {
+		a.payload;
+	});
 	const {
 		title: titleB,
 		setTitle: setTitleB,
@@ -17,6 +20,7 @@ function App() {
 	} = useFlatStore(["appStore", "b"], {
 		title: "IN",
 	});
+	setTitleActA();
 	return (
 		<div>
 			<div
