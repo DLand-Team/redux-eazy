@@ -12,31 +12,17 @@ const getCreateThunks = <
 >() => {
 	const createThunks = <
 		S extends {
-			[key in keyof S]: Parameters<
-				typeof cteateThunk<
-					typeof cteateThunk extends AsyncThunkPayloadCreator<
-						any,
-						infer U,
-						any
-					>
-						? U
-						: any,
-					typeof cteateThunk extends AsyncThunkPayloadCreator<
-						infer UU,
-						any,
-						any
-					>
-						? UU
-						: any,
-					typeof cteateThunk extends AsyncThunkPayloadCreator<
-						any,
-						any,
-						infer UUU
-					>
-						? UUU
-						: any
+			[key in keyof S]: (
+				a: typeof cteateThunk extends AsyncThunkPayloadCreator<
+					any,
+					infer U,
+					any
 				>
-			>[1];
+					? U
+					: any,
+				api: any,
+				branchName: string
+			) => any;
 		}
 	>(
 		name: keyof ReduxState | [keyof ReduxState, string[] | undefined],
