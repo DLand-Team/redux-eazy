@@ -24,8 +24,10 @@ export const getCreateThunkWithName = <
 	ReduxState extends any,
 	ReduxDispatch extends Dispatch<Action>
 >(
-	sliceName: string
+	sliceName: string,
+	branchName: string = ""
 ) => {
+	debugger;
 	return <
 		ThunkArg = void,
 		Returned = void,
@@ -40,7 +42,7 @@ export const getCreateThunkWithName = <
 				dispatch: Dispatch<PayloadAction<any>>;
 				rejectValue: string;
 				extra?: unknown;
-				serializedErrorType?: unknown;
+				serializedErrorType?: unknown
 				pendingMeta?: unknown;
 				fulfilledMeta?: unknown;
 				rejectedMeta?: unknown;
@@ -52,6 +54,14 @@ export const getCreateThunkWithName = <
 			state: ReduxState;
 			dispatch: ReduxDispatch;
 			rejectValue: string;
-		}>()(`${sliceName}/${name}`, creater, options as any);
+		}>()(
+			`${sliceName}/${name}`,
+			(...arg) => {
+				debugger;
+				//@ts-ignore
+				return creater(...arg, branchName);
+			},
+			options as any
+		);
 	};
 };

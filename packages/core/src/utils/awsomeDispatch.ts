@@ -76,15 +76,13 @@ export const getDp = <
 				: stores[storeName]["thunks"];
 			//@ts-ignore
 			const actionsTemp = stores[storeName]["slice"].find((item) => {
+				if (!item.branchName && !branchName) {
+					return true;
+				}
 				return item.branchName == branchName;
 			})["actions"];
 			//@ts-ignore
 			thunk = { ...thunksTemp, ...actionsTemp }[actionName];
-			//@ts-ignore
-			if (typeof payload == "object" && "payload" in payload) {
-				//@ts-ignore
-				payload.branchName = storeNameBase[1];
-			}
 		} else {
 			const thunks = {
 				...stores[storeName]["thunks"],

@@ -5,38 +5,155 @@ import {
 	Dispatch,
 } from "@reduxjs/toolkit";
 import { getCreateThunkWithName } from "./index";
+declare class RejectWithValue<Payload, RejectedMeta> {
+	readonly payload: Payload;
+	readonly meta: RejectedMeta;
+	private readonly _type;
+	constructor(payload: Payload, meta: RejectedMeta);
+}
 
+// Parameters<
+// 				typeof cteateThunk<
+// 					typeof cteateThunk extends AsyncThunkPayloadCreator<
+// 						any,
+// 						infer U,
+// 						any
+// 					>
+// 						? U
+// 						: any,
+// 					typeof cteateThunk extends AsyncThunkPayloadCreator<
+// 						infer UU,
+// 						any,
+// 						any
+// 					>
+// 						? UU
+// 						: any,
+// 					typeof cteateThunk extends AsyncThunkPayloadCreator<
+// 						any,
+// 						any,
+// 						infer UUU
+// 					>
+// 						? UUU
+// 						: any
+// 				>
+// 			>[1]
+
+declare class FulfillWithMeta<Payload, FulfilledMeta> {
+	readonly payload: Payload;
+	readonly meta: FulfilledMeta;
+	private readonly _type;
+	constructor(payload: Payload, meta: FulfilledMeta);
+}
+export type IsAny<T, True, False = never> = true | false extends (
+	T extends never ? true : false
+)
+	? True
+	: False;
+export type IsUnknown<T, True, False = never> = unknown extends T
+	? IsAny<T, False, True>
+	: False;
+export type BaseThunkAPI<
+	S,
+	E,
+	D extends Dispatch = Dispatch,
+	RejectedValue = unknown,
+	RejectedMeta = unknown,
+	FulfilledMeta = unknown
+> = {
+	dispatch: D;
+	getState: () => S;
+	extra: E;
+	requestId: string;
+	signal: AbortSignal;
+	abort: (reason?: string) => void;
+	rejectWithValue: IsUnknown<
+		RejectedMeta,
+		(value: RejectedValue) => RejectWithValue<RejectedValue, RejectedMeta>,
+		(
+			value: RejectedValue,
+			meta: RejectedMeta
+		) => RejectWithValue<RejectedValue, RejectedMeta>
+	>;
+	fulfillWithValue: IsUnknown<
+		FulfilledMeta,
+		<FulfilledValue>(value: FulfilledValue) => FulfilledValue,
+		<FulfilledValue>(
+			value: FulfilledValue,
+			meta: FulfilledMeta
+		) => FulfillWithMeta<FulfilledValue, FulfilledMeta>
+	>;
+};
+// type Test<T1 = any> = (a: T1, b: any, c: any) => any;
 const getCreateThunks = <
 	ReduxState = any,
 	ReduxDispatch extends Dispatch<Action> = Dispatch<Action>
 >() => {
+	type Test<T> = (a: T, b: any, branchName: any) => any;
 	const createThunks = <
 		S extends {
-			[key in keyof S]: Parameters<
-				typeof cteateThunk<
-					typeof cteateThunk extends AsyncThunkPayloadCreator<
-						any,
-						infer U,
-						any
-					>
-						? U
-						: any,
-					typeof cteateThunk extends AsyncThunkPayloadCreator<
-						infer UU,
-						any,
-						any
-					>
-						? UU
-						: any,
-					typeof cteateThunk extends AsyncThunkPayloadCreator<
-						any,
-						any,
-						infer UUU
-					>
-						? UUU
-						: any
-				>
-			>[1];
+			[key in keyof S]: S[key] extends Test<infer UU>
+				? (
+						a: UU,
+						b: BaseThunkAPI<ReduxState, unknown>,
+						branchName: string
+				  ) => ReturnType<
+						Parameters<
+							typeof cteateThunk<
+								typeof cteateThunk extends AsyncThunkPayloadCreator<
+									any,
+									infer U,
+									any
+								>
+									? U
+									: any,
+								typeof cteateThunk extends AsyncThunkPayloadCreator<
+									infer UU,
+									any,
+									any
+								>
+									? UU
+									: any,
+								typeof cteateThunk extends AsyncThunkPayloadCreator<
+									any,
+									any,
+									infer UUU
+								>
+									? UUU
+									: any
+							>
+						>[1]
+				  >
+				: (
+						a,
+						b: BaseThunkAPI<ReduxState, unknown>,
+						branchName: string
+				  ) => ReturnType<
+						Parameters<
+							typeof cteateThunk<
+								typeof cteateThunk extends AsyncThunkPayloadCreator<
+									any,
+									infer U,
+									any
+								>
+									? U
+									: any,
+								typeof cteateThunk extends AsyncThunkPayloadCreator<
+									infer UU,
+									any,
+									any
+								>
+									? UU
+									: any,
+								typeof cteateThunk extends AsyncThunkPayloadCreator<
+									any,
+									any,
+									infer UUU
+								>
+									? UUU
+									: any
+							>
+						>[1]
+				  >;
 		}
 	>(
 		name: keyof ReduxState | [keyof ReduxState, string[] | undefined],
@@ -73,7 +190,8 @@ const getCreateThunks = <
 						const cteateThunk = createThunkWithName(
 							`${name[0] as string}${
 								branchName ? "." + branchName : ""
-							}` as string
+							}` as string,
+							branchName
 						);
 						// @ts-ignore
 						thunksTemp[key] = cteateThunk(key, obj[key]);

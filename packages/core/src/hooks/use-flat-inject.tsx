@@ -61,8 +61,12 @@ const flatInjectHookCreater = <
 					? Parameters<S[T]["thunks"][K]>[0]
 					: undefined
 			) => Promise<
-				UnPromisify<ReturnType<UnReturn<S[T]["thunks"][K]>>> & {
-					payload: UnPayload<S[T]["thunks"][K]>;
+				{
+					payload: (typeof stores)[T]["thunks"][K] extends (
+						arg: any
+					) => AsyncThunkAction<infer U, any, any>
+						? U
+						: any;
 				} & { error?: any }
 			>;
 		} & Pick<ReturnType<ReduxStore["getState"]>[T], P>;

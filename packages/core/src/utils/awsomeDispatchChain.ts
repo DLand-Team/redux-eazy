@@ -109,13 +109,7 @@ export const getDpChain = <
 			const actionsTemp = stores[storeName]["slice"].find((item) => {
 				return item.branchName == branchName;
 			})["actions"];
-			//@ts-ignore
 			actMap = { ...thunksTemp, ...actionsTemp };
-			//@ts-ignore
-			if (typeof payload == "object" && "payload" in payload) {
-				//@ts-ignore
-				payload.branchName = branchName;
-			}
 		} else {
 			actMap = {
 				...stores[storeName]["thunks"],
