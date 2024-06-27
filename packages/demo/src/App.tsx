@@ -9,9 +9,7 @@ function App() {
 	} = useFlatStore(["appStore", "a"], {
 		title: "IN",
 	});
-	setTitleActA("1").then((a) => {
-		a.payload;
-	});
+	setTitleActA("1");
 	const {
 		title: titleB,
 		setTitle: setTitleB,
@@ -36,9 +34,7 @@ function App() {
 			</div>
 			<div
 				onClick={() => {
-					setTitleActB({
-						payload: Date.now().toString(),
-					});
+					setTitleActB(Date.now().toString());
 				}}
 			>
 				setTitleB

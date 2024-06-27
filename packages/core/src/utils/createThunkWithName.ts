@@ -2,11 +2,11 @@
 import {
 	Action,
 	AsyncThunkOptions,
-	AsyncThunkPayloadCreator,
 	Dispatch,
 	PayloadAction,
 	createAsyncThunk,
 } from "@reduxjs/toolkit";
+import { AsyncThunkPayloadCreator } from "./overwriteReudx";
 
 /* Instruments */
 declare type AsyncThunkConfig = {
@@ -24,7 +24,8 @@ export const getCreateThunkWithName = <
 	ReduxState extends any,
 	ReduxDispatch extends Dispatch<Action>
 >(
-	sliceName: string
+	sliceName: string,
+	branchName: string = ""
 ) => {
 	return <
 		ThunkArg = void,
@@ -52,6 +53,13 @@ export const getCreateThunkWithName = <
 			state: ReduxState;
 			dispatch: ReduxDispatch;
 			rejectValue: string;
-		}>()(`${sliceName}/${name}`, creater, options as any);
+		}>()(
+			`${sliceName}/${name}`,
+			(...arg) => {
+				//@ts-ignore
+				return creater(...arg, branchName);
+			},
+			options as any
+		);
 	};
 };

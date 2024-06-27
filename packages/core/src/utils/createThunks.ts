@@ -1,10 +1,7 @@
-import {
-	Action,
-	AsyncThunk,
-	AsyncThunkPayloadCreator,
-	Dispatch,
-} from "@reduxjs/toolkit";
+import { Action, AsyncThunk, Dispatch, PayloadAction } from "@reduxjs/toolkit";
 import { getCreateThunkWithName } from "./index";
+import { AsyncThunkPayloadCreator, GetThunkAPI } from "./overwriteReudx";
+// import { BaseThunkAPI } from "./overwriteReudx";
 
 const getCreateThunks = <
 	ReduxState = any,
@@ -13,15 +10,24 @@ const getCreateThunks = <
 	const createThunks = <
 		S extends {
 			[key in keyof S]: (
-				a: typeof cteateThunk extends AsyncThunkPayloadCreator<
+				arg: typeof cteateThunk extends AsyncThunkPayloadCreator<
 					any,
 					infer U,
 					any
 				>
 					? U
 					: any,
-				api: any,
-				branchName: string
+				api: GetThunkAPI<{
+					state: ReduxState;
+					dispatch: Dispatch<PayloadAction<any>>;
+					rejectValue: string;
+					extra?: unknown;
+					serializedErrorType?: unknown;
+					pendingMeta?: unknown;
+					fulfilledMeta?: unknown;
+					rejectedMeta?: unknown;
+				}>,
+				branch?: string
 			) => any;
 		}
 	>(
@@ -44,8 +50,6 @@ const getCreateThunks = <
 					? UUU
 					: any
 			>;
-		} & {
-			branchName: string;
 		};
 		const cteateThunk = createThunkWithName(name as string);
 		if (Array.isArray(name)) {
@@ -59,7 +63,8 @@ const getCreateThunks = <
 						const cteateThunk = createThunkWithName(
 							`${name[0] as string}${
 								branchName ? "." + branchName : ""
-							}` as string
+							}` as string,
+							item
 						);
 						// @ts-ignore
 						thunksTemp[key] = cteateThunk(key, obj[key]);
