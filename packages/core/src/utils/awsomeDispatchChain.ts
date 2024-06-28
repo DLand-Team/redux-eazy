@@ -29,7 +29,7 @@ export const getDpChain = <
 	stores: S
 ) => {
 	const dp = <T extends keyof typeof stores>(
-		storeNameBase: T | [T, string]
+		storeNameBase: T | [T, string | undefined]
 	): {
 		[key2 in keyof ((typeof stores)[T]["thunks"] &
 			(typeof stores)[T]["slice"]["actions"])]: key2 extends keyof (typeof stores)[T]["thunks"]
@@ -114,11 +114,6 @@ export const getDpChain = <
 			})["actions"];
 			//@ts-ignore
 			actMap = { ...thunksTemp, ...actionsTemp };
-			//@ts-ignore
-			if (typeof payload == "object" && "payload" in payload) {
-				//@ts-ignore
-				payload.branchName = branchName;
-			}
 		} else {
 			actMap = {
 				...stores[storeName]["thunks"],

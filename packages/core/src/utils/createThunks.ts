@@ -1,7 +1,6 @@
 import { Action, AsyncThunk, Dispatch, PayloadAction } from "@reduxjs/toolkit";
 import { getCreateThunkWithName } from "./index";
 import { AsyncThunkPayloadCreator, GetThunkAPI } from "./overwriteReudx";
-// import { BaseThunkAPI } from "./overwriteReudx";
 
 const getCreateThunks = <
 	ReduxState = any,

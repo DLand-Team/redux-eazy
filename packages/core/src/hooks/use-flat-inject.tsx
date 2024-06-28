@@ -76,7 +76,7 @@ const flatInjectHookCreater = <
 		T extends keyof ReturnType<ReduxStore["getState"]>,
 		Keys extends Partial<Record<S, "IN">>
 	>(
-		storeNameBase: T | [T, string],
+		storeNameBase: T | [T, string | undefined],
 		keys?: Keys
 	) => {
 		const [storeName, branchName] = Array.isArray(storeNameBase)
@@ -100,6 +100,9 @@ const flatInjectHookCreater = <
 		const sliceTemp = Array.isArray(stores[storeName]["slice"])
 			? //@ts-ignore
 			  stores[storeName]["slice"].find((item) => {
+					if (!item.branchName && !branchName) {
+						return true;
+					}
 					return item.branchName == branchName;
 			  })
 			: stores[storeName]["slice"];
@@ -148,13 +151,6 @@ const flatInjectHookCreater = <
 					thunkArr = {
 						...thunkArr,
 						[key]: (payload: never) => {
-							if (
-								typeof payload == "object" &&
-								"payload" in payload
-							) {
-								//@ts-ignore
-								payload.branchName = branchName;
-							}
 							return reduxStore
 								.dispatch(thk(payload))
 								.then((res: any) => {

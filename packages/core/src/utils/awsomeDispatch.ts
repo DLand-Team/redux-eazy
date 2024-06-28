@@ -36,7 +36,7 @@ export const getDp = <
 			| "setState"
 			| "reset"
 	>(
-		storeNameBase: T | [T, string],
+		storeNameBase: T | [T, string | undefined],
 		actionName: K,
 		payload?: K extends "setState"
 			? S[T]["slice"] extends Slice<infer U, any, any>
