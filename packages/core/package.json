@@ -2,7 +2,7 @@
 	"name": "redux-eazy",
 	"main": "dist/redux-eazy.es.js",
 	"types": "dist/types/index.d.ts",
-	"version": "0.1.9-beta.5",
+	"version": "0.1.9-beta.8",
 	"description": "Vite & TypeScript",
 	"author": "闲D阿强",
 	"files": [

@@ -79,10 +79,15 @@ const flatInjectHookCreater = <
 		storeNameBase: T | [T, string | undefined],
 		keys?: Keys
 	) => {
-		const [storeName, branchName] = Array.isArray(storeNameBase)
+		let [storeName, branchName = ""] = Array.isArray(storeNameBase)
 			? [`${storeNameBase[0] as string}`, storeNameBase[1]]
 			: [storeNameBase as string, undefined];
-		const sliceName = `${storeName}${branchName ? "." + branchName : ""}`;
+		let sliceName = `${storeName}${branchName ? "." + branchName : ""}`;
+		// 如果发现brancName是个不存在的值
+		if (!(sliceName in reduxStore.getState())) {
+			branchName = "";
+			sliceName = storeName;
+		}
 		const storeState = useAppSelector<ReturnType<ReduxStore["getState"]>>()(
 			(state) => {
 				if (keys && Object.keys(keys!)?.length) {

@@ -93,7 +93,6 @@ export const getDpChain = <
 		const [storeName, branchName] = Array.isArray(storeNameBase)
 			? [`${storeNameBase[0] as string}`, storeNameBase[1]]
 			: [storeNameBase as string, undefined];
-
 		let actMap;
 		if (Array.isArray(stores[storeName].slice)) {
 			const thunksTemp = Array.isArray(stores[storeName]["thunks"])

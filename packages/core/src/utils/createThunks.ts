@@ -33,6 +33,7 @@ const getCreateThunks = <
 		name: keyof ReduxState | [keyof ReduxState, string[] | undefined],
 		obj: S
 	) => {
+		
 		const createThunkWithName = getCreateThunkWithName<
 			ReduxState,
 			ReduxDispatch

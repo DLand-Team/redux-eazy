@@ -4,7 +4,7 @@ import { createLogger } from "redux-logger";
 import Redux from "redux";
 const listenerMiddleware = createListenerMiddleware();
 
-const middleware: Redux.Middleware[] = [
+const middlewares: Redux.Middleware[] = [
 	listenerMiddleware.middleware,
 	createLogger({
 		duration: true,
@@ -21,4 +21,4 @@ const middleware: Redux.Middleware[] = [
 	}) as Redux.Middleware,
 ];
 
-export { listenerMiddleware, middleware };
+export { listenerMiddleware, middlewares };
