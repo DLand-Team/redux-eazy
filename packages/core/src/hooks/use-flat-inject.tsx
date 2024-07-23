@@ -1,8 +1,8 @@
 import { AsyncThunk, AsyncThunkAction, EnhancedStore } from "@reduxjs/toolkit";
-import { shallowEqual } from "react-redux";
-import { SlicePro } from "src/utils/createSliceCustom";
-import { WatchType } from "src/utils/createStore";
+import { SlicePro } from "../utils/createSliceCustom";
+import { WatchType } from "../utils/createStore";
 import useAppSelector from "./use-app-selector";
+import isEqual from "fast-deep-equal";
 
 // type TupleHead<T extends any[]> = T[number];
 // export type L2T<L, LAlias = L, LAlias2 = L> = [L] extends [never]
@@ -99,7 +99,7 @@ const flatInjectHookCreater = <
 				}
 				return state[sliceName];
 			},
-			shallowEqual
+			isEqual
 		);
 		const { thunks } = stores[storeName];
 		const sliceTemp = Array.isArray(stores[storeName]["slice"])
@@ -137,7 +137,7 @@ const flatInjectHookCreater = <
 								params
 							);
 						},
-						shallowEqual
+						isEqual
 					);
 				};
 			}

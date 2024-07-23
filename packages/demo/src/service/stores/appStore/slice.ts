@@ -1,5 +1,5 @@
-import { createSliceE, PayloadAction } from "redux-eazy";
-import names from "../names";
+import { PayloadAction } from "redux-eazy";
+import { createSlice } from "../..";
 import { Pagination, QueryApiRes, SliceState } from "./model";
 
 const initialState = (): SliceState => {
@@ -14,8 +14,8 @@ const initialState = (): SliceState => {
 	};
 };
 
-const slice = createSliceE({
-	name: names.appStore,
+const slice = createSlice({
+	name: "appStore",
 	stateInit: initialState,
 	branch: ["a", "b"],
 	reducers: {
