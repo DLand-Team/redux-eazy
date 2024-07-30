@@ -46,7 +46,7 @@ export const createSliceCreater = <T extends string>() => {
 		Name extends string = T,
 		ReducerPath extends string = Name,
 		Selectors extends SliceSelectors<State> = SliceSelectors<State>,
-		ComputedValue extends Computed<State> = Computed<State>
+		ComputedValue extends Computed<State> = {}
 	>(
 		options: OptionsCustom<
 			State,

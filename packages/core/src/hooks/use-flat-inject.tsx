@@ -52,10 +52,6 @@ const flatInjectHookCreater = <
 	> = {
 		slices: S[T]["slice"];
 	} & S[T]["slice"]["actions"] & {
-			[key in keyof S[T]["slice"]["computed"]]: (
-				params: Parameters<S[T]["slice"]["computed"][key]>[1]
-			) => ReturnType<S[T]["slice"]["computed"][key]>;
-		} & {
 			[K in keyof S[T]["thunks"]]: (
 				payload?: Parameters<S[T]["thunks"][K]> extends any[]
 					? Parameters<S[T]["thunks"][K]>[0]
@@ -69,12 +65,16 @@ const flatInjectHookCreater = <
 						: any;
 				} & { error?: any }
 			>;
-		} & Pick<ReturnType<ReduxStore["getState"]>[T], P>;
+		} & Pick<ReturnType<ReduxStore["getState"]>[T], P> & {
+			[key in keyof S[T]["slice"]["computed"]]: (
+				params: Parameters<S[T]["slice"]["computed"][key]>[1]
+			) => ReturnType<S[T]["slice"]["computed"][key]>;
+		};
 
 	const useFlatInject = <
 		S extends keyof ReturnType<ReduxStore["getState"]>[T],
 		T extends keyof ReturnType<ReduxStore["getState"]>,
-		Keys extends Partial<Record<S, "IN">>
+		Keys extends Partial<Record<S, "IN">> = {}
 	>(
 		storeNameBase: T | [T, string | undefined],
 		keys?: Keys
