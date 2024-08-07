@@ -14,13 +14,12 @@ function App() {
 		title: "IN",
 	});
 	const {
+		asdasd,
 		title: titleA,
 		setTitle: setTitleA,
 		setTitleAct: setTitleActA,
 		test: testA,
-	} = useFlatStore(["appStore", "a"], {
-		title: "IN",
-	});
+	} = useFlatStore(["appStore", "a"]);
 	const {
 		title: titleB,
 		setTitle: setTitleB,
@@ -165,7 +164,7 @@ function App() {
 							onClick={() => {
 								dp(
 									["appStore", "a"],
-									"setTitle",
+									"setTitleAct",
 									Date.now().toString()
 								);
 							}}
@@ -174,9 +173,7 @@ function App() {
 						</Button>
 						<Button
 							onClick={() => {
-								dpChain(["appStore", "a"]).setTitleAct(
-									Date.now()
-								);
+								dpChain(["appStore", "a"]).setTitleAct(null);
 							}}
 						>
 							dpChain

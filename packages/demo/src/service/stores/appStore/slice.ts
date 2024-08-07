@@ -37,11 +37,11 @@ const slice = createSlice({
 			};
 		},
 	},
-	computed: {
-		test(state, test) {
-			return state.title + "~" + test;
-		},
-	},
+	// computed: {
+	// 	test(state, test) {
+	// 		return state.title + "~" + test;
+	// 	},
+	// },
 });
 
 export default slice;

@@ -34,7 +34,7 @@ type OptionsCustom<
 	CreateSliceOptions<State, CaseReducers, Name, ReducerPath, Selectors> & {
 		branch?: string[];
 		stateInit: () => State;
-		computed?: ComputedValue | undefined;
+		computed?: Computed<State> & ComputedValue;
 	},
 	"initialState"
 >;
