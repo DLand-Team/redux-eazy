@@ -1,8 +1,8 @@
-export { getCreateThunkWithName } from "./createThunkWithName";
-export { createSliceE } from "./createSliceCustom";
-export { createMatcher } from "./createWatchMatcher";
 export { getDp } from "./awsomeDispatch";
 export { getDpChain } from "./awsomeDispatchChain";
-export { getActionTypeCreater } from "./getActionType";
+export { createSliceCreater } from "./createSliceCustom";
 export { default as createStoreE } from "./createStore";
+export { getCreateThunkWithName } from "./createThunkWithName";
 export { default as getCreateThunks } from "./createThunks";
+export { createMatcher } from "./createWatchMatcher";
+export { getActionTypeCreater } from "./getActionType";

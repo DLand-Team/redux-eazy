@@ -29,45 +29,31 @@ export const getDpChain = <
 	stores: S
 ) => {
 	const dp = <T extends keyof typeof stores>(
-		storeNameBase: T | [T, string]
+		storeNameBase: T | [T, string | undefined]
 	): {
 		[key2 in keyof ((typeof stores)[T]["thunks"] &
 			(typeof stores)[T]["slice"]["actions"])]: key2 extends keyof (typeof stores)[T]["thunks"]
-			? NonNullable<UnParams<(typeof stores)[T]["thunks"][key2]>> extends
-					| undefined
-					| null
-				? () => key2 extends keyof (typeof stores)[T]["thunks"]
-						? Promise<
-								{
-									payload: (typeof stores)[T]["thunks"][key2] extends (
-										arg: any
-									) => AsyncThunkAction<infer U, any, any>
-										? U
-										: any;
-								} & { error?: any }
+			? (
+					payload: key2 extends "setState"
+						? S[T]["slice"] extends Slice<infer U, any, any>
+							? Partial<U>
+							: any
+						: UnParams<
+								key2 extends keyof (typeof stores)[T]["slice"]["actions"]
+									? (typeof stores)[T]["slice"]["actions"][key2]
+									: key2 extends keyof (typeof stores)[T]["thunks"]
+									? (typeof stores)[T]["thunks"][key2]
+									: any
 						  >
-						: void
-				: (
-						payload: key2 extends "setState"
-							? S[T]["slice"] extends Slice<infer U, any, any>
-								? Partial<U>
-								: any
-							: UnParams<
-									key2 extends keyof (typeof stores)[T]["slice"]["actions"]
-										? (typeof stores)[T]["slice"]["actions"][key2]
-										: any
-							  >
-				  ) => key2 extends keyof (typeof stores)[T]["thunks"]
-						? Promise<
-								{
-									payload: (typeof stores)[T]["thunks"][key2] extends (
-										arg: any
-									) => AsyncThunkAction<infer U, any, any>
-										? U
-										: any;
-								} & { error?: any }
-						  >
-						: void
+			  ) => Promise<
+					{
+						payload: (typeof stores)[T]["thunks"][key2] extends (
+							arg: any
+						) => AsyncThunkAction<infer U, any, any>
+							? U
+							: any;
+					} & { error?: any }
+			  >
 			: (
 					payload: key2 extends "setState"
 						? S[T]["slice"] extends Slice<infer U, any, any>
@@ -93,7 +79,6 @@ export const getDpChain = <
 		const [storeName, branchName] = Array.isArray(storeNameBase)
 			? [`${storeNameBase[0] as string}`, storeNameBase[1]]
 			: [storeNameBase as string, undefined];
-
 		let actMap;
 		if (Array.isArray(stores[storeName].slice)) {
 			const thunksTemp = Array.isArray(stores[storeName]["thunks"])
@@ -107,6 +92,9 @@ export const getDpChain = <
 				: stores[storeName]["thunks"];
 			//@ts-ignore
 			const actionsTemp = stores[storeName]["slice"].find((item) => {
+				if (!item.branchName && !branchName) {
+					return true;
+				}
 				return item.branchName == branchName;
 			})["actions"];
 			actMap = { ...thunksTemp, ...actionsTemp };

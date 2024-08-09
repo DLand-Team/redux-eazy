@@ -80,7 +80,10 @@ export const getActionTypeCreater = <
 					};
 				}
 			});
-			Object.keys({ ...value.thunks }).forEach((keyItem) => {
+			const thunks = Array.isArray(value.thunks)
+				? value.thunks[0]
+				: value.thunks;
+			Object.keys({ ...thunks }).forEach((keyItem) => {
 				if (!b[key as keyof Slices]) {
 					//@ts-ignore
 					tempB[key as keyof Slices] = {

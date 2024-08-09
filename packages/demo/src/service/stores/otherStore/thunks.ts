@@ -1,10 +1,10 @@
-import { dp, dpChain } from "../..";
+import { dpChain } from "../..";
 import { createThunks } from "../../setup";
 const thunks = createThunks("otherStore", {
-	setTitleAct: async (a, api) => {
-		dp("otherStore", "setTitle", a);
+	setTitleAct: async (a: string, api) => {
+		dpChain("otherStore").setTitle(a);
 	},
-	setTitleActA: async () => {
+	testAct: async () => {
 		return {
 			a: 1,
 		};

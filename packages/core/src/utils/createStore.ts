@@ -7,7 +7,7 @@ import {
 	configureStore,
 } from "@reduxjs/toolkit";
 import { EnhancedStore } from "@reduxjs/toolkit";
-import { listenerMiddleware, middleware } from "../middleware";
+import { listenerMiddleware, middlewares } from "../middleware";
 type StoreSlices<T> = {
 	[K in keyof T]: T[K] extends { slice: infer ST }
 		? ST extends { reducer: infer D }
@@ -31,8 +31,15 @@ const createStore = <
 	M extends Middlewares<ST> = ReadonlyArray<Middleware<{}, ST>>
 >(
 	stores: ST,
-	middlewareList?: M
+	options?: {
+		middleware?: {
+			isLogger?: boolean;
+			middlewareList?: M;
+		};
+	}
 ) => {
+	const { middleware } = options || {};
+	const { isLogger, middlewareList = [] } = middleware || {};
 	const fn = <T>(
 		key: keyof T,
 		reducer: T,
@@ -67,7 +74,7 @@ const createStore = <
 		reducer,
 		middleware: (getDefaultMiddleware) => {
 			return getDefaultMiddleware().concat([
-				...middleware,
+				...(isLogger ? middlewares : middlewares.slice(0, 1)),
 				...(middlewareList ? middlewareList : []),
 			]);
 		},

@@ -1,8 +1,8 @@
 import { AsyncThunk, AsyncThunkAction, EnhancedStore } from "@reduxjs/toolkit";
-import { shallowEqual } from "react-redux";
-import { SlicePro } from "src/utils/createSliceCustom";
-import { WatchType } from "src/utils/createStore";
+import { SlicePro } from "../utils/createSliceCustom";
+import { WatchType } from "../utils/createStore";
 import useAppSelector from "./use-app-selector";
+import isEqual from "fast-deep-equal";
 
 // type TupleHead<T extends any[]> = T[number];
 // export type L2T<L, LAlias = L, LAlias2 = L> = [L] extends [never]
@@ -52,10 +52,6 @@ const flatInjectHookCreater = <
 	> = {
 		slices: S[T]["slice"];
 	} & S[T]["slice"]["actions"] & {
-			[key in keyof S[T]["slice"]["computed"]]: (
-				params: Parameters<S[T]["slice"]["computed"][key]>[1]
-			) => ReturnType<S[T]["slice"]["computed"][key]>;
-		} & {
 			[K in keyof S[T]["thunks"]]: (
 				payload?: Parameters<S[T]["thunks"][K]> extends any[]
 					? Parameters<S[T]["thunks"][K]>[0]
@@ -69,20 +65,29 @@ const flatInjectHookCreater = <
 						: any;
 				} & { error?: any }
 			>;
-		} & Pick<ReturnType<ReduxStore["getState"]>[T], P>;
+		} & Pick<ReturnType<ReduxStore["getState"]>[T], P> & {
+			[key in keyof S[T]["slice"]["computed"]]: (
+				params: Parameters<S[T]["slice"]["computed"][key]>[1]
+			) => ReturnType<S[T]["slice"]["computed"][key]>;
+		};
 
 	const useFlatInject = <
 		S extends keyof ReturnType<ReduxStore["getState"]>[T],
 		T extends keyof ReturnType<ReduxStore["getState"]>,
 		Keys extends Partial<Record<S, "IN">>
 	>(
-		storeNameBase: T | [T, string],
+		storeNameBase: T | [T, string | undefined],
 		keys?: Keys
 	) => {
-		const [storeName, branchName] = Array.isArray(storeNameBase)
+		let [storeName, branchName = ""] = Array.isArray(storeNameBase)
 			? [`${storeNameBase[0] as string}`, storeNameBase[1]]
 			: [storeNameBase as string, undefined];
-		const sliceName = `${storeName}${branchName ? "." + branchName : ""}`;
+		let sliceName = `${storeName}${branchName ? "." + branchName : ""}`;
+		// 如果发现brancName是个不存在的值
+		if (!(sliceName in reduxStore.getState())) {
+			branchName = "";
+			sliceName = storeName;
+		}
 		const storeState = useAppSelector<ReturnType<ReduxStore["getState"]>>()(
 			(state) => {
 				if (keys && Object.keys(keys!)?.length) {
@@ -94,12 +99,15 @@ const flatInjectHookCreater = <
 				}
 				return state[sliceName];
 			},
-			shallowEqual
+			isEqual
 		);
 		const { thunks } = stores[storeName];
 		const sliceTemp = Array.isArray(stores[storeName]["slice"])
 			? //@ts-ignore
 			  stores[storeName]["slice"].find((item) => {
+					if (!item.branchName && !branchName) {
+						return true;
+					}
 					return item.branchName == branchName;
 			  })
 			: stores[storeName]["slice"];
@@ -129,7 +137,7 @@ const flatInjectHookCreater = <
 								params
 							);
 						},
-						shallowEqual
+						isEqual
 					);
 				};
 			}
@@ -148,13 +156,6 @@ const flatInjectHookCreater = <
 					thunkArr = {
 						...thunkArr,
 						[key]: (payload: never) => {
-							if (
-								typeof payload == "object" &&
-								"payload" in payload
-							) {
-								//@ts-ignore
-								payload.branchName = branchName;
-							}
 							return reduxStore
 								.dispatch(thk(payload))
 								.then((res: any) => {

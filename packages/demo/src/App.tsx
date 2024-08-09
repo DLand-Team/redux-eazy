@@ -7,32 +7,19 @@ function App() {
 		setTitle: setTitleOther,
 		setTitleAct: setTitleActOther,
 		test: testOther,
-	} = useFlatStore("otherStore");
-	const { title, setTitle, setTitleAct, test, testAct } = useFlatStore(
-		"appStore",
-		{
-			title: "IN",
-		}
-	);
-	dpChain("appStore")
-		.testAct()
-		.then((a) => {
-			a.payload.a;
-		});
-	dp("appStore", "testAct").then((a) => {
-		a.payload;
+	} = useFlatStore("otherStore", {
+		title: "IN",
 	});
-	testAct().then((a) => {
-		a.payload.a;
+	const { title, setTitle, setTitleAct, test } = useFlatStore("appStore", {
+		title: "IN",
 	});
 	const {
+		asdasd,
 		title: titleA,
 		setTitle: setTitleA,
 		setTitleAct: setTitleActA,
 		test: testA,
-	} = useFlatStore(["appStore", "a"], {
-		title: "IN",
-	});
+	} = useFlatStore(["appStore", "a"]);
 	const {
 		title: titleB,
 		setTitle: setTitleB,
@@ -77,9 +64,7 @@ function App() {
 						</Button>
 						<Button
 							onClick={() => {
-								setTitleActOther({
-									payload: Date.now().toString(),
-								});
+								setTitleActOther(Date.now().toString());
 							}}
 						>
 							setTitleAct
@@ -179,7 +164,7 @@ function App() {
 							onClick={() => {
 								dp(
 									["appStore", "a"],
-									"setTitle",
+									"setTitleAct",
 									Date.now().toString()
 								);
 							}}
@@ -188,9 +173,7 @@ function App() {
 						</Button>
 						<Button
 							onClick={() => {
-								dpChain(["appStore", "a"]).setTitleAct(
-									Date.now()
-								);
+								dpChain(["appStore", "a"]).setTitleAct(null);
 							}}
 						>
 							dpChain
@@ -215,9 +198,7 @@ function App() {
 						</Button>
 						<Button
 							onClick={() => {
-								setTitleActB({
-									payload: Date.now().toString(),
-								});
+								setTitleActB(Date.now().toString());
 							}}
 						>
 							setTitleAct

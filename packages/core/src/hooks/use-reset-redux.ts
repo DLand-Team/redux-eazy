@@ -7,9 +7,9 @@ const resetReduxHookCreater = <
 		[key in keyof S]: {
 			slice: Slice;
 		};
-	},
+	}
 >(
-	stores: S,
+	stores: S
 ) => {
 	const useResetRedux = () => {
 		const dp = useDispatch();
@@ -22,8 +22,15 @@ const resetReduxHookCreater = <
 					Object.values<{
 						slice: Slice;
 					}>(stores).forEach((item) => {
-						const { reset } = item.slice.actions as any;
-						reset && dp(reset());
+						if (Array.isArray(item.slice)) {
+							item.slice.forEach((itemB) => {
+								const { reset } = itemB.actions as any;
+								reset && dp(reset());
+							});
+						} else {
+							const { reset } = item.slice.actions as any;
+							reset && dp(reset());
+						}
 					});
 				}
 			};
