@@ -19,13 +19,27 @@ const resetReduxHookCreater = <
 			return (storeName?: keyof S | [keyof S, string]) => {
 				if (storeName) {
 					if (Array.isArray(storeName)) {
+						let storeNameMain = storeName[0];
 						let storeNameTemp =
 							storeName.length > 1
 								? storeName.join(".")
 								: storeName[0];
-						const { reset } = stores[storeNameTemp as keyof S].slice
-							.actions as any;
-						reset && dp(reset());
+						if (
+							Array.isArray(
+								stores[storeNameMain as keyof S]?.slice
+							)
+						) {
+							const item = stores[
+								storeNameMain as keyof S
+								//@ts-ignore
+							].slice.find((item) => {
+								return item.name == storeNameTemp;
+							});
+							if (item) {
+								const { reset } = item?.actions || {};
+								reset && dp(reset());
+							}
+						}
 					} else {
 						const { reset } = stores[storeName].slice
 							.actions as any;
