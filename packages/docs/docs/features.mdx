@@ -1,0 +1,71 @@
+---
+sidebar_position: 2
+---
+
+import Link from "@docusaurus/Link";
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import DocCardList from "@theme/DocCardList";
+
+# 特色
+
+## 仓库分支
+
+我愿称为一切非 class 状态管理的神迹。
+仅仅通过配置分支数组，即可实现状态仓库的多“实例”
+这对与业务相同，页面不同的场景有奇效。
+大大大的节省了搬砖难度，减少工作量，利于维护。
+
+## 计算属性
+
+一个返回经过计算得出值的函数
+
+### 用法
+
+**创建**
+
+```tsx
+...
+
+const slice = createSlice({
+	name: ...,
+	stateInit: ...,
+	reducers: {
+	    ...
+	},
+	computed: {
+		targetItinerary(state) {
+			return ruleHelper.getTargetItinerary(state);
+		},
+	},
+});
+
+export default slice;
+```
+
+**使用**
+
+```tsx
+const Comp = () => {
+	const targetItineraryState = targetItinerary(undefined);
+	const {
+		flightCategory = 1,
+		noOverNight = 0,
+		noInterline = 0,
+		carrier,
+		allowCodeShare,
+		operateCarriers,
+		notOperateCarriers,
+	} = targetItineraryState || {};
+	return <></>;
+};
+```
+
+## 价值所在
+
+你知道 signal 么，比较类似其思想，善用计算属性，可以大大节省搬砖工作量。
+
+仅仅通过比对计算属性前后值，如果（经过深度比较）不同，那么就会触发组件的刷新。
+
+比如一个场景，某个页面中需要有一个数据，该数据需要根据某些（非常容易更新的）状态计算得出，并且其他地方也会使用，与其
+每次使用的时候，计算得出最新的值，不如直接将计算逻辑通过计算属性进行表达，UI 无脑使用即可。大大的省心了。

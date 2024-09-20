@@ -8,6 +8,7 @@ import {
 } from "@reduxjs/toolkit";
 import { EnhancedStore } from "@reduxjs/toolkit";
 import { listenerMiddleware, middlewares } from "../middleware";
+// import { reducerManager } from "./reducerManager";
 type StoreSlices<T> = {
 	[K in keyof T]: T[K] extends { slice: infer ST }
 		? ST extends { reducer: infer D }
@@ -71,7 +72,7 @@ const createStore = <
 	}
 
 	const reduxStore = configureStore({
-		reducer,
+		reducer: reducer,
 		middleware: (getDefaultMiddleware) => {
 			return getDefaultMiddleware().concat([
 				...(isLogger ? middlewares : middlewares.slice(0, 1)),

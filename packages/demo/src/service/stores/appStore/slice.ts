@@ -1,6 +1,6 @@
 import { PayloadAction } from "redux-eazy";
-import { createSlice } from "../..";
 import { Pagination, QueryApiRes, SliceState } from "./model";
+import { createSlice } from "../../setup";
 
 const initialState = (): SliceState => {
 	return {
@@ -37,11 +37,11 @@ const slice = createSlice({
 			};
 		},
 	},
-	// computed: {
-	// 	test(state, test) {
-	// 		return state.title + "~" + test;
-	// 	},
-	// },
+	computed: {
+		test(state, test) {
+			return state.title + "~" + test;
+		},
+	},
 });
 
 export default slice;

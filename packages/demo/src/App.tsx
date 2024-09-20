@@ -14,7 +14,6 @@ function App() {
 		title: "IN",
 	});
 	const {
-		asdasd,
 		title: titleA,
 		setTitle: setTitleA,
 		setTitleAct: setTitleActA,

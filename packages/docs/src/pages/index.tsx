@@ -21,7 +21,7 @@ function HomepageHeader() {
 							一个简约好用、类型友好、规范完整的Redux整合方案
 						</p>
 						<p className={styles.title3}>
-							All in one, 代码简洁, 开发高效，易于维护，永远开源
+							All in one, 代码简洁， 开发高效，易于维护，永远开源
 						</p>
 						<div className={styles.btnPart}>
 							<Link className={styles.btn} to="/docs/intro">

@@ -1,15 +1,18 @@
-import { Action, ThunkAction, TypedStartListening } from "redux-eazy";
 import {
+	Action,
+	ThunkAction,
+	TypedStartListening,
 	appSelectorHookCreater,
+	createSliceCreater,
 	getCreateThunkWithName,
 	getCreateThunks,
 	listenerMiddleware,
 	useReduxDispatch,
 } from "redux-eazy";
-import { reduxStore } from "./index";
+import type { reduxStore } from "./index";
+export type ReduxState = ReturnType<typeof reduxStore.getState>;
 /* Types */
 export type ReduxStore = typeof reduxStore;
-export type ReduxState = ReturnType<typeof reduxStore.getState>;
 export type ReduxDispatch = typeof reduxStore.dispatch;
 export type ReduxThunkAction<ReturnType = void> = ThunkAction<
 	ReturnType,
@@ -27,3 +30,4 @@ export type AppStartListening = TypedStartListening<ReduxState, ReduxDispatch>;
 export const startAppListening =
 	listenerMiddleware.startListening as AppStartListening;
 export const createThunks = getCreateThunks<ReduxState, ReduxDispatch>();
+export const createSlice = createSliceCreater<keyof ReduxState>();
