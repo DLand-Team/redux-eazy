@@ -27,7 +27,6 @@ export const getCreateThunkWithName = <
 	sliceName: string,
 	branchName: string = ""
 ) => {
-	debugger;
 	return <
 		ThunkArg = void,
 		Returned = void,
@@ -42,7 +41,7 @@ export const getCreateThunkWithName = <
 				dispatch: Dispatch<PayloadAction<any>>;
 				rejectValue: string;
 				extra?: unknown;
-				serializedErrorType?: unknown
+				serializedErrorType?: unknown;
 				pendingMeta?: unknown;
 				fulfilledMeta?: unknown;
 				rejectedMeta?: unknown;

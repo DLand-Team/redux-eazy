@@ -8,6 +8,7 @@ import {
 } from "@reduxjs/toolkit";
 import { EnhancedStore } from "@reduxjs/toolkit";
 import { listenerMiddleware, middlewares } from "../middleware";
+import { getActionTypeCreater } from "./getActionType";
 // import { reducerManager } from "./reducerManager";
 type StoreSlices<T> = {
 	[K in keyof T]: T[K] extends { slice: infer ST }
@@ -22,7 +23,8 @@ export type WatchType = (
 		unknown,
 		ThunkDispatch<unknown, unknown, Action>,
 		unknown
-	>
+	>,
+	getActionType: any
 ) => void;
 type Middlewares<S> = ReadonlyArray<Middleware<{}, S>>;
 const createStore = <
@@ -81,6 +83,7 @@ const createStore = <
 		},
 	});
 	listenerMiddleware.clearListeners();
+	const getActionType = getActionTypeCreater(stores);
 	// 注册监听
 	Object.values<{
 		slice: {
@@ -90,10 +93,10 @@ const createStore = <
 	}>(stores).forEach((s) => {
 		if (Array.isArray(s.slice)) {
 			s.slice.forEach((item) => {
-				s?.watch(item?.branchName, listenerMiddleware);
+				s?.watch(item?.branchName, listenerMiddleware, getActionType);
 			});
 		} else {
-			s?.watch("", listenerMiddleware);
+			s?.watch("", listenerMiddleware, getActionType);
 		}
 	});
 
