@@ -1,8 +1,11 @@
 import {
 	Action,
+	ActionCreatorInvariantMiddlewareOptions,
+	ImmutableStateInvariantMiddlewareOptions,
 	ListenerMiddlewareInstance,
 	Middleware,
 	Reducer,
+	SerializableStateInvariantMiddlewareOptions,
 	ThunkDispatch,
 	configureStore,
 } from "@reduxjs/toolkit";
@@ -17,16 +20,20 @@ type StoreSlices<T> = {
 			: never
 		: never;
 };
-export type WatchType = (
-	branchName: string,
+export type WatchType = (data: {
+	branchName: string;
 	listenerMiddleware: ListenerMiddlewareInstance<
 		unknown,
 		ThunkDispatch<unknown, unknown, Action>,
 		unknown
-	>,
-	getActionType: any
-) => void;
+	>;
+	getActionType: any;
+}) => void;
 type Middlewares<S> = ReadonlyArray<Middleware<{}, S>>;
+interface ThunkOptions<E = any> {
+	extraArgument: E;
+}
+
 const createStore = <
 	ST extends {
 		[key in keyof ST]: ST[key];
@@ -37,12 +44,28 @@ const createStore = <
 	options?: {
 		middleware?: {
 			isLogger?: boolean;
+			middleWareOptions?: {
+				thunk?: boolean | ThunkOptions;
+				immutableCheck?:
+					| boolean
+					| ImmutableStateInvariantMiddlewareOptions;
+				serializableCheck?:
+					| boolean
+					| SerializableStateInvariantMiddlewareOptions;
+				actionCreatorCheck?:
+					| boolean
+					| ActionCreatorInvariantMiddlewareOptions;
+			};
 			middlewareList?: M;
 		};
 	}
 ) => {
 	const { middleware } = options || {};
-	const { isLogger, middlewareList = [] } = middleware || {};
+	const {
+		isLogger,
+		middleWareOptions,
+		middlewareList = [],
+	} = middleware || {};
 	const fn = <T>(
 		key: keyof T,
 		reducer: T,
@@ -76,7 +99,7 @@ const createStore = <
 	const reduxStore = configureStore({
 		reducer: reducer,
 		middleware: (getDefaultMiddleware) => {
-			return getDefaultMiddleware().concat([
+			return getDefaultMiddleware(middleWareOptions).concat([
 				...(isLogger ? middlewares : middlewares.slice(0, 1)),
 				...(middlewareList ? middlewareList : []),
 			]);
@@ -93,10 +116,18 @@ const createStore = <
 	}>(stores).forEach((s) => {
 		if (Array.isArray(s.slice)) {
 			s.slice.forEach((item) => {
-				s?.watch(item?.branchName, listenerMiddleware, getActionType);
+				s?.watch({
+					branchName: item?.branchName,
+					listenerMiddleware,
+					getActionType,
+				});
 			});
 		} else {
-			s?.watch("", listenerMiddleware, getActionType);
+			s?.watch({
+				branchName: "",
+				listenerMiddleware,
+				getActionType,
+			});
 		}
 	});
 

@@ -1,14 +1,4 @@
-<p align="center">
- <img src="https://qiniu.moderate.run/img/Console03.svg" alt="favicon-x128.png" border="0" />
-</p>
-<h1 align="center">Redux Eazy</h1>
-
-<p align="center">
-  <img src="https://shields.io/badge/TypeScript-Driver-green?logo=typescript" alt="lang">
-  <img src="https://shields.io/badge/version-0.0.5-green?logo=github" alt="version">
-</p>
-
-# Redux Eazy
+# redux-azy
 
 ## Usage
 
