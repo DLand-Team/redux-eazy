@@ -10,7 +10,7 @@ export type IsAny<T, True, False = never> = true | false extends (
 export type IsUnknown<T, True, False = never> = unknown extends T
 	? IsAny<T, False, True>
 	: False;
-// type Test<T1 = any> = (a: T1, b: any, c: any) => any;
+
 const getCreateThunks = <
 	ReduxState = any,
 	ReduxDispatch extends Dispatch<Action> = Dispatch<Action>
