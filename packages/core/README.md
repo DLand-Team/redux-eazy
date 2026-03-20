@@ -1,336 +1,123 @@
-<p align="center">
- <img src="https://qiniu.moderate.run/img/Console03.svg" alt="favicon-x128.png" border="0" />
-</p>
-<h1 align="center">Redux Eazy</h1>
+# Guide-Eazy - React 引导库
 
-<p align="center">
-  <img src="https://shields.io/badge/TypeScript-Driver-green?logo=typescript" alt="lang">
-  <img src="https://shields.io/badge/version-0.0.5-green?logo=github" alt="version">
-</p>
+## 简介
 
-# Redux Eazy
-
-## Usage
+Guide-Eazy 是一款专门为 React 应用设计的引导库，能够助力开发者便捷地构建交互式引导流程，有效提升用户对应用功能的认知度与操作熟练度，从而优化用户体验。
 
 ### install
 
 ```shell
-pnpm i redux-eazy
+pnpm i guide-eazy
 ```
 
-### Create Store Entity
+## 核心亮点
 
-```ts
-/* name */
-import slice from "./slice";
-import thunks from "./thunks";
-import watch from "./watch";
+-   支持 JSX 自定义渲染
+-   完备的类型支持
+-   JSON 配置
+-   支持异步引导，跨越路由
+-   方便定位引导点 - GuideHook 插眼
+-   支持强化的 Guide ref，直接可用，没有任何心智负担
 
-const store: {
-	slice: typeof slice;
-	thunks: typeof thunks;
-	watch: typeof watch;
-} = {
-	slice,
-	thunks,
-	watch,
-};
+## demo
 
-export default store;
-```
+就做两件事
 
-### Register Store Names
+-   创建一个 Provider
 
-```ts
-const names = {
-	authStore: "authStore",
-	appStore: "appStore",
-};
+```jsx
+"use client";
 
-export default names;
-```
-
-### Create Slice - Store Slice
-
-**Main Responsibilities:**
-
-1. Define state variables and initialize state.
-    - The purpose of setting stateInit is to enable the reset of Redux.
-2. Set reducers to modify the state.
-3. Configure extraReducers for Redux thunks.
-
-```ts
-/* Core */
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import names from "../names";
-import { IGeo } from "src/service/model/geo";
-import { createSliceCustom } from "src/redux-helper";
-
-/* Types */
-export interface SliceState {
-	geoData: IGeo[];
-	info: string;
-}
-
-const initialState = (): SliceState => {
-	return {
-		geoData: [],
-		info: "test",
-	};
-};
-
-const appSlice = createSliceCustom({
-	name: names.appStore,
-	stateInit: initialState,
-	reducers: {
-		setInfo(state, action: PayloadAction<string>) {
-			state.info = action.payload;
-		},
-		setGeoData(state, action: PayloadAction<IGeo[]>) {
-			state.geoData = action.payload;
-		},
-	},
-
-	extraReducers: (builder) => {},
-});
-
-export default appSlice;
-```
-
-### Create Thunks - Asynchronous Operations
-
-**Main Responsibilities:**
-
-1. Create asynchronous operation thunks.
-2. Integrate HTTP request logic.
-3. Modify the state of any repository through dispatch.
-
-```ts
-/* Instruments */
-import { dp } from "src/service";
-import { FileUploadApiRequest } from "src/service/model/appStoreModel";
-import { QueryGeoRequest } from "src/service/model/model";
-import { createThunks } from "src/service/setup";
-import names from "../names";
-import httpApi from "./api";
-
-const thunks = createThunks(names.appStore, {
-	geoQueryAct: async (arg: QueryGeoRequest, api) => {
-		const { data } = await httpApi.geoQueryApi(arg);
-		dp("appStore", "setGeoData", data);
-	},
-	getUploadUrlAct: async (arg: FileUploadApiRequest, api) => {
-		const { file, ...rest } = arg;
-		const { data } = await httpApi.getUploadUrlApi(rest);
-		const { fileUrl, presignedUrl } = data;
-		await httpApi.fileUploadApi(presignedUrl, file!);
-		return { presignedUrl, fileUrl };
-	},
-});
-export default thunks;
-```
-
-### Create Watch
-
-**Main Responsibilities:**
-
-1. Listen for changes in all repositories, including its own, and respond accordingly.
-
-```ts
-import { ListenerMiddleware, createMatcher } from "src/redux-helper";
-import { dp, getActionType } from "src/service";
-import { SliceState } from "./slice";
-import { startAppListening } from "src/service/setup";
-
-const watch = (listenerMiddleware: ListenerMiddleware) => {
-	startAppListening({
-		matcher: createMatcher<SliceState>((action) => {
-			return action.type == `${getActionType("appStore").setInfo}`;
-		}),
-		effect: (_) => {
-			dp("authStore", "setToken", { token: Date.now().toString() });
-		},
-	});
-	listenerMiddleware.startListening({
-		predicate: (action, currentState, previousState) => {
-			return false;
-		},
-		effect: async (action, listenerApi) => {},
-	});
-};
-
-export default watch;
-```
-
-### Create API
-
-```ts
-import { http } from "src/common/http";
-import { QueryGeoRequest } from "../../model/model";
-import { IGeo } from "src/service/model/geo";
+import { Card } from "antd";
 import {
-	FileUploadApiRequest,
-	FileUploadApiRespone,
-} from "src/service/model/appStoreModel";
+	GuideCoreProvider,
+	GuideHook as GuideHookBase,
+	useGuideRef,
+} from "guide-eazy";
+import "guide-eazy/dist/style.css";
+import { PropsWithChildren, useEffect } from "react";
 
-function geoQueryApi(params: QueryGeoRequest) {
-	return http.request<{ content: IGeo[] }>({
-		url: "/nestApi/geo/query",
-		method: "POST",
-		data: params,
-	});
-}
+export type GuideId = "start" | "step1_1" | "step1_2" | "step1_3";
 
-function fileUploadApi(url: string, params: File) {
-	return http.put(url, params, {
-		headers: {
-			"Content-Type": "multipart/form-data",
-		},
-	});
-}
+const GuideProvider = ({ children }: PropsWithChildren) => {
+	const guideIns = useGuideRef();
 
-function getUploadUrlApi(params: FileUploadApiRequest) {
-	return http.request<{ content: FileUploadApiRespone }>({
-		url: "/nestApi/file/get/uploadUrl",
-		method: "POST",
-		data: params,
-	});
-}
-
-const api = {
-	getUploadUrlApi,
-	geoQueryApi,
-	fileUploadApi,
-};
-
-export default api;
-```
-
-### Configuration for Type Support
-
-```ts
-import { Action, ThunkAction, TypedStartListening } from "@reduxjs/toolkit";
-import {
-	appSelectorHookCreater,
-	getCreateThunkWithName,
-	getCreateThunks,
-	listenerMiddleware,
-	useReduxDispatch,
-} from "redux-super";
-import { reduxStore } from "./index";
-/* Types */
-export type ReduxStore = typeof reduxStore;
-export type ReduxState = ReturnType<typeof reduxStore.getState>;
-export type ReduxDispatch = typeof reduxStore.dispatch;
-export type ReduxThunkAction<ReturnType = void> = ThunkAction<
-	ReturnType,
-	ReduxState,
-	unknown,
-	Action
->;
-export const createThunkWithName = getCreateThunkWithName<
-	ReduxState,
-	ReduxDispatch
->;
-export const useDispatch = useReduxDispatch<ReduxDispatch>;
-export const useAppSelecter = appSelectorHookCreater<ReduxState>;
-export type AppStartListening = TypedStartListening<ReduxState, ReduxDispatch>;
-export const startAppListening =
-	listenerMiddleware.startListening as AppStartListening;
-export const createThunks = getCreateThunks<ReduxState, ReduxDispatch>();
-```
-
-### Create Redux Store
-
-```ts
-import {
-	createStore,
-	flatInjectHookCreater,
-	getActionTypeCreater,
-	getDp,
-	resetReduxHookCreater,
-} from "redux-super";
-import { stores } from "./stores";
-
-export const getActionType = getActionTypeCreater(stores);
-
-export const reduxStore = createStore(stores);
-
-/* Hooks */
-export const useResetRedux = resetReduxHookCreater(stores);
-export const useFlat = flatInjectHookCreater(stores, reduxStore);
-/* utils */
-export const dp = getDp(reduxStore, stores);
-```
-
-## hooks
-
-### useFlatInject
-
-`Reducers`, `thunks`, and `states` are all exported in a flat structure, which is quite convenient. Moreover, thunks can be executed directly without needing to dispatch them. This is quite handy.
-
-```ts
-import Talk from "talkjs";
-import { useEffect, useRef } from "react";
-import { useFlatInject } from "../hooks";
-
-const ChatFunction = () => {
-	const { userInfo, userInfoMemberAct } = useFlatInject("authStore");
 	useEffect(() => {
-		userInfoMemberAct();
+		guideIns.current?.drive();
 	}, []);
-
-	const chatContainer = useRef(null);
-
 	return (
-		<div>
-			<div ref={chatContainer} style={{ height: "800px" }}></div>
-		</div>
+		<GuideCoreProvider<GuideId>
+			guideIns={guideIns}
+			steps={{
+				showProgress: true,
+				steps: [
+					{
+						id: "start",
+						customPopRender({ api }) {
+							return (
+								<Card
+									style={{
+										position: "relative",
+										bottom: 50,
+										padding: "32px",
+										fontSize: "30px",
+										fontWeight: "bold",
+									}}
+									onClick={() => {
+										api.setGuideIndex(1);
+									}}
+								>
+									欢迎来到闲D岛🏝️
+								</Card>
+							);
+						},
+					},
+				],
+			}}
+		>
+			{children}
+		</GuideCoreProvider>
 	);
 };
-
-export default ChatFunction;
+export const GuideHook = GuideHookBase<GuideId>;
+export default GuideProvider;
 ```
 
-### useResetRedux
+-   然后就是“插眼”
 
-reset redux
-
-```ts
-import { useMemo } from "react";
-import { useDispatch } from "react-redux";
-import storageHelper from "src/common/utils/storageHelper";
-import { stores } from "src/service/stores";
-
-const useResetRedux = () => {
-	const dp = useDispatch();
-	const func = useMemo<() => void>(() => {
-		return () => {
-			storageHelper.clear();
-			Object.values(stores).forEach((item) => {
-				const { reset } = item.slice.actions as any;
-				reset && dp(reset());
-			});
-		};
-	}, []);
-	return func;
-};
-
-export default useResetRedux;
+```jsx
+function TestNode({ id, item }: NavItemProps) {
+	return (
+		<Button>
+			...
+			<GuideHook readyId={"step1_1"} />
+			...
+		</Button>
+	);
+}
 ```
 
-### useAppSelector
+## API 文档
 
-### useDispatch
+-   GuideCoreProvider
 
-## utils
+    -   Props:
+        -   guideIns: 引导实例对象，用于控制引导流程的启动、暂停等操作。
+        -   steps: 引导步骤的配置对象，包含以下属性：
+        -   showProgress: 布尔值，是否显示引导进度，默认为 false。
+        -   steps: 引导步骤数组，每个步骤是一个包含以下属性的对象：
+            -   id: 步骤的唯一标识，用于在引导流程中识别和定位步骤。
+            -   customPopRender: 自定义弹出内容渲染函数，接收一个包含 api 的对象，通过 api 可以控制引导流程的进度，如切换到下一个步骤等。
 
-### awsomeDispatch
+-   GuideHook
+    -   Props:
+        -   readyId: 字符串，用于标记引导点的唯一标识，与引导步骤中的 id 相对应，以便在引导流程中准确找到目标组件。
 
-### createThunkWithName
+## 贡献指南
 
-### createSliceCustom
+我们热忱欢迎广大开发者积极参与 Guide-Eazy 的开发与优化工作。如果您在使用过程中发现任何问题，或者有新颖的功能创意与建议，请毫不犹豫地提交 issue 或者 pull request 到项目的 GitHub 仓库。您的每一份贡献都将为项目的持续发展注入强大动力，共同打造更加出色的 React 引导库。
 
-### createWatchMatcher
+## 许可证
 
-### getActionType
+Guide-Eazy 采用 MIT 许可证发布，这意味着您可以在遵循许可证条款的前提下，自由地使用、修改和分发本库。无论是个人项目还是商业应用，都能够充分利用 Guide-Eazy 的强大功能，为用户带来卓越的引导体验。
+借助 Guide-Eazy，您能够在 React 应用开发中迅速搭建起高效、灵活且用户友好的引导系统，显著提升用户对应用功能的理解与掌握程度，为应用的成功推广与广泛使用奠定坚实基础。
