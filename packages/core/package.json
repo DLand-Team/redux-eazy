@@ -2,8 +2,13 @@
 	"name": "guide-eazy",
 	"main": "dist/guide-eazy.es.js",
 	"types": "dist/types/index.d.ts",
+<<<<<<< HEAD
 	"version": "0.0.17-beta.3",
 	"description": "Guide for React",
+=======
+	"version": "0.1.16-beta.2",
+	"description": "Vite & TypeScript",
+>>>>>>> f63147e46aa1420ef69bf1a40ddadb95d3c8612f
 	"author": "闲D阿强",
 	"files": [
 		"dist"

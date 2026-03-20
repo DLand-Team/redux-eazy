@@ -1,8 +1,14 @@
+<<<<<<< HEAD
 # Guide-Eazy - React 引导库
 
 ## 简介
 
 Guide-Eazy 是一款专门为 React 应用设计的引导库，能够助力开发者便捷地构建交互式引导流程，有效提升用户对应用功能的认知度与操作熟练度，从而优化用户体验。
+=======
+# redux-azy
+
+## Usage
+>>>>>>> f63147e46aa1420ef69bf1a40ddadb95d3c8612f
 
 ### install
 
